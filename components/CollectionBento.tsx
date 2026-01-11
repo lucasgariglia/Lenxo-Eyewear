@@ -1,42 +1,59 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { PRODUCTS } from '../data';
+import { Link } from 'react-router-dom';
 
 interface CollectionItemProps {
+  id: string;
   name: string;
   image: string;
   color: string;
   textColor?: string;
   isLarge?: boolean;
+  specs?: { material?: string; lens?: string };
 }
 
-const CollectionItem: React.FC<CollectionItemProps> = ({ name, image, color, textColor = "text-zinc-900", isLarge = false }) => (
-  <motion.div 
-    whileHover={{ y: -10 }}
-    className={`relative rounded-3xl overflow-hidden group cursor-pointer ${isLarge ? 'md:row-span-2 aspect-[4/5] md:aspect-auto' : 'aspect-square'}`}
+const CollectionItem: React.FC<CollectionItemProps> = ({ id, name, image, color, textColor = "text-zinc-900", isLarge = false, specs }) => (
+  <Link 
+    to={`/product/${id}`}
+    className={`block relative group cursor-pointer rounded-3xl overflow-hidden ${isLarge ? 'md:row-span-2 aspect-[4/5] md:aspect-auto' : 'aspect-square'}`}
     style={{ backgroundColor: color }}
   >
-    {/* Full bleed image container */}
-    <div className="absolute inset-0">
-      <img 
-        src={image} 
-        alt={name} 
-        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-      />
-    </div>
-    {/* Gradient for text readability on images */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
-    
-    <div className="absolute bottom-0 left-0 w-full p-8 flex justify-between items-end z-10">
-      <h3 className={`text-2xl font-medium tracking-tight ${textColor === 'text-zinc-900' ? 'text-white' : textColor} drop-shadow-md`}>{name}</h3>
-      <div className={`w-10 h-10 rounded-full border border-white/40 text-white flex items-center justify-center group-hover:rotate-45 transition-transform duration-300 backdrop-blur-sm`}>
-        <ArrowRight size={16} />
+    <motion.div 
+      className="w-full h-full relative"
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Full bleed image container */}
+      <div className="absolute inset-0">
+        <img 
+          src={image} 
+          alt={name} 
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+        />
       </div>
-    </div>
-  </motion.div>
+      {/* Gradient for text readability on images */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+      
+      <div className="absolute bottom-0 left-0 w-full p-8 flex justify-between items-end z-10">
+        <h3 className={`text-2xl font-medium tracking-tight ${textColor === 'text-zinc-900' ? 'text-white' : textColor} drop-shadow-md`}>{name}</h3>
+        <div className={`w-10 h-10 rounded-full border border-white/40 text-white flex items-center justify-center group-hover:rotate-45 transition-transform duration-300 backdrop-blur-sm`}>
+          <ArrowRight size={16} />
+        </div>
+      </div>
+    </motion.div>
+  </Link>
 );
 
 export const CollectionBento: React.FC = () => {
+  // We manually map specific products to the grid layout to maintain the specific design (Large Crystal item in center)
+  const obsidian = PRODUCTS.find(p => p.id === 'obsidian');
+  const crystal = PRODUCTS.find(p => p.id === 'crystal');
+  const luminous = PRODUCTS.find(p => p.id === 'luminous');
+
+  if (!obsidian || !crystal || !luminous) return null;
+
   return (
     <section className="py-24 xl:py-[8vw] px-6 xl:px-[4vw] bg-[#FAFAFA]">
       <div className="container mx-auto max-w-[1600px]">
@@ -50,47 +67,50 @@ export const CollectionBento: React.FC = () => {
               Carefully crafted frames and lenses designed for comfort, clarity, and style.
             </p>
           </div>
-          <button className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 hover:bg-zinc-800 transition-colors self-start md:self-end">
+          <Link to="/collection" className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 hover:bg-zinc-800 transition-colors self-start md:self-end">
             <span className="text-xs font-bold uppercase tracking-widest">Explore Collection</span>
             <ArrowRight size={14} />
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 xl:gap-[1.5vw]">
-          {/* Item 1 */}
+          {/* Item 1 - Obsidian */}
           <div className="flex flex-col gap-6 xl:gap-[1.5vw]">
              <CollectionItem 
-                name="Obsidian" 
-                color="#F4F4F5" 
-                image="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=800&auto=format&fit=crop"
+                id={obsidian.id}
+                name={obsidian.name} 
+                color={obsidian.accentColor || '#F4F4F5'} 
+                image={obsidian.image}
                 textColor="text-white"
               />
               <div className="hidden md:block p-8">
                 <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-2">Material</p>
-                <p className="text-zinc-800">Acetate & Titanium</p>
+                <p className="text-zinc-800">{obsidian.specs?.material}</p>
               </div>
           </div>
 
-          {/* Item 2 - Large */}
+          {/* Item 2 - Crystal (Large) */}
           <CollectionItem 
-            name="Crystal" 
-            color="#EAB308" 
-            image="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop"
+            id={crystal.id}
+            name={crystal.name} 
+            color={crystal.accentColor || '#EAB308'} 
+            image={crystal.image}
             textColor="text-white"
             isLarge
           />
 
-          {/* Item 3 */}
+          {/* Item 3 - Luminous */}
           <div className="flex flex-col gap-6 xl:gap-[1.5vw]">
             <CollectionItem 
-              name="Luminous" 
-              color="#FFFFFF" 
-              image="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop"
+              id={luminous.id}
+              name={luminous.name} 
+              color={luminous.accentColor || '#FFFFFF'} 
+              image={luminous.image}
               textColor="text-white"
             />
              <div className="hidden md:block p-8 text-right">
                 <p className="text-xs font-bold tracking-widest uppercase text-zinc-400 mb-2">Lenses</p>
-                <p className="text-zinc-800">Blue-light blocking</p>
+                <p className="text-zinc-800">{luminous.specs?.lens}</p>
               </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const CareBanner: React.FC = () => {
   return (
@@ -34,10 +35,10 @@ export const CareBanner: React.FC = () => {
             Carefully crafted frames and lenses designed for comfort, clarity, and style. Experience the difference of premium eyewear.
           </p>
 
-          <button className="bg-white text-black px-8 py-3 rounded-full flex items-center gap-3 w-fit hover:bg-zinc-200 transition-colors">
+          <Link to="/collection" className="bg-white text-black px-8 py-3 rounded-full flex items-center gap-3 w-fit hover:bg-zinc-200 transition-colors">
             <span className="text-sm font-bold uppercase tracking-widest">Explore All</span>
             <ArrowRight size={16} />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

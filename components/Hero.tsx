@@ -1,8 +1,13 @@
 import React from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight, Play, Navigation, Music } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  onPlayVideo: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onPlayVideo }) => {
   const { scrollY } = useScroll();
 
   // AR Card Scroll Logic
@@ -58,11 +63,14 @@ export const Hero: React.FC = () => {
              transition={{ delay: 0.5, duration: 1 }}
              className="mt-[3vw] flex items-center gap-[2vw]"
            >
-             <button className="bg-white text-black px-[2.5vw] py-[1vw] rounded-full flex items-center gap-[0.5vw] hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+             <Link to="/collection" className="bg-white text-black px-[2.5vw] py-[1vw] rounded-full flex items-center gap-[0.5vw] hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                <span className="text-[1vw] font-bold uppercase tracking-widest">Pre-Order</span>
                <ArrowRight size="1.2vw" />
-             </button>
-             <div className="flex items-center gap-[0.8vw] text-white cursor-pointer group">
+             </Link>
+             <div 
+                onClick={onPlayVideo}
+                className="flex items-center gap-[0.8vw] text-white cursor-pointer group"
+             >
                <div className="w-[3vw] h-[3vw] rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white/10 transition-colors backdrop-blur-sm">
                  <Play size="1.2vw" fill="white" />
                </div>
@@ -150,9 +158,14 @@ export const Hero: React.FC = () => {
             <p className="text-zinc-400 text-lg mb-8 max-w-xs">
               Experience the world with intelligent overlays that disappear when you don't need them.
             </p>
-            <button className="w-full bg-white text-black py-4 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
-               Pre-Order Now
-            </button>
+            <div className="flex flex-col gap-4">
+                <Link to="/collection" className="w-full bg-white text-black py-4 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                   Pre-Order Now
+                </Link>
+                <button onClick={onPlayVideo} className="w-full bg-white/10 backdrop-blur text-white py-4 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 border border-white/20">
+                   <Play size={12} fill="currentColor" /> Watch Film
+                </button>
+            </div>
          </div>
       </div>
     </section>
