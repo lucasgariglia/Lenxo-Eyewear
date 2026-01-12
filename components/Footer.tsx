@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
         </div>
         
         <div className="mt-12 flex justify-between text-xs text-zinc-400 uppercase tracking-widest">
-           <p>© 2024 Lenxo Inc.</p>
+           <p>© {new Date().getFullYear()} Lenxo Inc.</p>
            <p>Privacy Policy</p>
         </div>
 
