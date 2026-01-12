@@ -10,7 +10,7 @@ export const CareBanner: React.FC = () => {
         
         {/* Background Image: Calm, sharp focus */}
         <img 
-          src="https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?q=80&w=1600&auto=format&fit=crop" 
+          src="/images/lenxo-photo-1589578228447-e1a4e481c6c8.jpg" 
           alt="Eye care lifestyle" 
           className="absolute inset-0 w-full h-full object-cover"
         />

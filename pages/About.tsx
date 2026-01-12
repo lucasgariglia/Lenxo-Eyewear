@@ -58,7 +58,7 @@ export const About: React.FC = () => {
             {/* Background Video/Image Layer */}
             <motion.div className="absolute inset-0 z-0" style={{ filter: bgBlur }}>
                <img
-                 src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=2000&auto=format&fit=crop"
+                 src="/images/lenxo-photo-1540959733332-eab4deabeeaf.jpg"
                  alt="Tokyo Night"
                  className="w-full h-full object-cover opacity-60"
                />
@@ -196,7 +196,7 @@ export const About: React.FC = () => {
                
                <div className="order-1 lg:order-2 h-[60vh] lg:h-[80vh] bg-zinc-900 rounded-[2rem] overflow-hidden relative group">
                   <img 
-                    src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?q=80&w=1600&auto=format&fit=crop" 
+                    src="/images/lenxo-photo-1591076482161-42ce6da69f67.jpg" 
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out" 
                     alt="Craftsmanship"
                   />
@@ -231,7 +231,7 @@ export const About: React.FC = () => {
                 >
                     <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-8 relative">
                         <img 
-                            src="https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=800&auto=format&fit=crop" 
+                            src="/images/lenxo-photo-1618220179428-22790b461013.jpg" 
                             alt="Acetate Sheets" 
                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-110" 
                         />
@@ -258,7 +258,7 @@ export const About: React.FC = () => {
                     <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-8 relative">
                         {/* REPLACED IMAGE HERE */}
                         <img 
-                            src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=800&auto=format&fit=crop" 
+                            src="/images/lenxo-photo-1504917595217-d4dc5ebe6122.jpg" 
                             alt="Milling" 
                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-110" 
                         />
@@ -284,7 +284,7 @@ export const About: React.FC = () => {
                 > 
                     <div className="aspect-[3/4] overflow-hidden rounded-2xl mb-8 relative">
                         <img 
-                            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" 
+                            src="/images/lenxo-photo-1581091226825-a6a2a5aee158.jpg" 
                             alt="Polishing" 
                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-110" 
                         />

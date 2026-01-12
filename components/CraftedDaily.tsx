@@ -74,7 +74,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
             <div className="bg-[#27272A] rounded-2xl p-8 aspect-square flex flex-col justify-end relative overflow-hidden">
                 <p className="text-6xl font-serif italic text-zinc-500 mb-4">1</p>
                 <div className="flex -space-x-4 mb-4">
-                  {["https://images.unsplash.com/photo-1534528741775-53994a69daeb", "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"].map((src, i) => (
+                  {["/images/lenxo-photo-1534528741775-53994a69daeb.jpg", "/images/lenxo-photo-1506794778202-cad84cf45f1d.jpg", "/images/lenxo-photo-1507003211169-0a1dd7228f2d.jpg"].map((src, i) => (
                     <img key={i} src={`${src}?q=80&w=100&auto=format&fit=crop`} className="w-10 h-10 rounded-full border-2 border-[#27272A] object-cover" alt="user" />
                   ))}
                 </div>
@@ -83,7 +83,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
             
             {/* Card 2: Lifestyle Mobile */}
             <div onClick={() => onQuickView('nebula')} className="bg-[#F3EAD5] rounded-2xl aspect-square relative overflow-hidden block">
-               <img src="https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover mix-blend-multiply opacity-90" alt="Lifestyle" />
+               <img src="/images/lenxo-photo-1509695507497-903c140c43b0.jpg" className="w-full h-full object-cover mix-blend-multiply opacity-90" alt="Lifestyle" />
                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full border border-black/5 z-30">
                     <span className="text-xs font-bold uppercase tracking-widest text-black">Campaign 2024</span>
                </div>
@@ -98,7 +98,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
 
             {/* Card 3: Product Mobile */}
             <div onClick={() => onQuickView('crystal')} className="bg-white rounded-2xl aspect-square relative overflow-hidden block">
-                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover" alt="Product" />
+                <img src="/images/lenxo-photo-1511499767150-a48a237f0083.jpg" className="w-full h-full object-cover" alt="Product" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 text-white">
                    <p className="font-bold text-lg">Crystal Frame</p>
@@ -130,7 +130,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
                </div>
                <p className="text-[4vw] font-serif italic text-zinc-500 mb-4 group-hover:text-white transition-colors duration-500">1</p>
                <div className="flex -space-x-[0.5vw] mb-4">
-                 {["https://images.unsplash.com/photo-1534528741775-53994a69daeb", "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"].map((src, i) => (
+                 {["/images/lenxo-photo-1534528741775-53994a69daeb.jpg", "/images/lenxo-photo-1506794778202-cad84cf45f1d.jpg", "/images/lenxo-photo-1507003211169-0a1dd7228f2d.jpg"].map((src, i) => (
                    <div key={i} className="w-[3vw] h-[3vw] rounded-full border-2 border-[#27272A] bg-zinc-600 overflow-hidden">
                      <img 
                       src={`${src}?q=80&w=200&auto=format&fit=crop`} 
@@ -152,7 +152,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
               className="w-[22vw] aspect-square bg-[#F3EAD5] rounded-2xl overflow-hidden relative group shrink-0 select-none cursor-pointer"
             >
                <img 
-                 src="https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=800&auto=format&fit=crop" 
+                 src="/images/lenxo-photo-1509695507497-903c140c43b0.jpg" 
                  className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-110 transition-transform duration-700" 
                  alt="Lifestyle" 
                  draggable="false"
@@ -197,7 +197,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
               className="w-[22vw] aspect-square bg-white rounded-2xl relative overflow-hidden group shrink-0 select-none cursor-pointer"
             >
                 <img 
-                    src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop" 
+                    src="/images/lenxo-photo-1511499767150-a48a237f0083.jpg" 
                     className="w-full h-full object-cover" 
                     alt="Glasses Detail" 
                     draggable="false"
@@ -240,7 +240,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
               className="w-[22vw] aspect-square bg-zinc-900 rounded-2xl relative overflow-hidden group shrink-0 select-none cursor-pointer"
             >
                <img 
-                 src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" 
+                 src="/images/lenxo-photo-1581091226825-a6a2a5aee158.jpg" 
                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" 
                  alt="Process" 
                  draggable="false"
@@ -264,7 +264,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
                 className="w-[22vw] aspect-square bg-[#111] rounded-2xl relative overflow-hidden group shrink-0 select-none cursor-pointer"
              >
                 <img 
-                    src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop" 
+                    src="/images/lenxo-photo-1483985988355-763728e1935b.jpg" 
                     className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
                     alt="Look" 
                     draggable="false"
@@ -306,7 +306,7 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
                     whileHover={{ scale: 0.98 }}
                     className="w-[22vw] aspect-square bg-[#18181B] rounded-2xl p-[2vw] flex items-center justify-center relative overflow-hidden group shrink-0 cursor-pointer select-none"
                 >
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"></div>
+                <div className="absolute inset-0 bg-[url('/images/lenxo-photo-1618005182384-a83a8bd57fbe.jpg')] bg-cover bg-center opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"></div>
                 <div className="relative z-10 text-center flex flex-col items-center gap-4">
                     <div className="w-16 h-16 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
                         <ArrowRight size={24} />

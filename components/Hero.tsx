@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({ onPlayVideo }) => {
           className="absolute inset-0 z-0"
         >
           <img 
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2680&auto=format&fit=crop" 
+            src="/images/lenxo-photo-1633332755192-727a05c4013d.jpg" 
             alt="Lenxo Smart Glasses"
             className="w-full h-full object-cover opacity-80"
           />
@@ -143,7 +143,7 @@ export const Hero: React.FC<HeroProps> = ({ onPlayVideo }) => {
       <div className="xl:hidden relative w-full h-screen max-h-[900px] flex flex-col justify-end pb-24 px-6 bg-[#050505]">
          <div className="absolute inset-0 z-0">
             <img 
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1200&auto=format&fit=crop" 
+              src="/images/lenxo-photo-1633332755192-727a05c4013d.jpg" 
               alt="Background"
               className="w-full h-full object-cover opacity-60"
             />

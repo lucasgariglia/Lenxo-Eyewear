@@ -28,7 +28,7 @@ export const ClarityEditorial: React.FC = () => {
               className="mt-8 xl:mt-0 xl:absolute xl:top-[-2vw] xl:left-[35vw] w-full xl:w-[22vw] aspect-[4/5] shadow-2xl z-20 rounded-3xl overflow-hidden bg-zinc-200 transform-gpu"
             >
               <img 
-                src="https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=800&auto=format&fit=crop" 
+                src="/images/lenxo-photo-1577803645773-f96470509666.jpg" 
                 alt="Clarity Editorial" 
                 className="w-full h-full object-cover"
               />
@@ -52,7 +52,7 @@ export const ClarityEditorial: React.FC = () => {
            </p>
            
            <div className="flex items-center justify-center gap-4">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" className="w-12 h-12 rounded-full object-cover" alt="User" />
+              <img src="/images/lenxo-photo-1534528741775-53994a69daeb.jpg" className="w-12 h-12 rounded-full object-cover" alt="User" />
               <div className="text-left">
                 <p className="text-sm font-bold text-zinc-900">Arafah Ahmed</p>
                 <p className="text-xs text-zinc-500 uppercase tracking-wider">UI Designer</p>
