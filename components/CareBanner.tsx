@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export const CareBanner: React.FC = () => {
   return (
     <section className="px-6 xl:px-[4vw] pb-24 xl:pb-[8vw]">
-      <div className="relative w-full aspect-[16/10] xl:aspect-[2.4/1] rounded-[2rem] overflow-hidden">
+      <div className="relative w-full aspect-[4/5] md:aspect-[16/10] xl:aspect-[2.4/1] rounded-[2rem] overflow-hidden">
         
         {/* Background Image: Calm, sharp focus */}
         <img 
@@ -15,23 +15,23 @@ export const CareBanner: React.FC = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+        {/* Gradient Overlay: Vertical on mobile (bottom-up), Horizontal on desktop (left-right) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/60 md:via-black/20 md:to-transparent" />
 
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 xl:px-[5vw]">
+        {/* Content: Bottom aligned on mobile, Center on desktop */}
+        <div className="absolute inset-0 flex flex-col justify-end md:justify-center px-8 py-12 md:px-16 xl:px-[5vw]">
           <motion.h2 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-white text-5xl md:text-6xl xl:text-[5vw] font-bold tracking-tighter leading-[0.95] mb-8 max-w-2xl"
+            className="text-white text-4xl md:text-6xl xl:text-[5vw] font-bold tracking-tighter leading-[0.95] mb-6 md:mb-8 max-w-2xl"
           >
             YOUR EYES<br/>
             DESERVE<br/>
             BETTER CARE
           </motion.h2>
           
-          <p className="text-zinc-200 text-lg md:text-xl max-w-lg mb-10 leading-relaxed drop-shadow-md">
+          <p className="text-zinc-200 text-base md:text-xl max-w-lg mb-8 md:mb-10 leading-relaxed drop-shadow-md">
             Carefully crafted frames and lenses designed for comfort, clarity, and style. Experience the difference of premium eyewear.
           </p>
 

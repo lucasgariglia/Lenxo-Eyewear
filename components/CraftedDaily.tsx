@@ -81,12 +81,19 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
                 <p className="text-sm font-medium text-zinc-300">95% Customer<br/>Satisfaction</p>
             </div>
             
-            {/* Card 2: Lifestyle Mobile */}
+            {/* Card 2: Lifestyle Mobile - UPDATED WITH ICONS */}
             <div onClick={() => onQuickView('nebula')} className="bg-[#F3EAD5] rounded-2xl aspect-square relative overflow-hidden block">
                <img src="https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover mix-blend-multiply opacity-90" alt="Lifestyle" />
                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full border border-black/5 z-30">
                     <span className="text-xs font-bold uppercase tracking-widest text-black">Campaign 2024</span>
                </div>
+               {/* Added Globe Icon for Mobile */}
+               <div className="absolute top-4 right-4 z-30">
+                   <div className="w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-black border border-black/5" title="Global Edition">
+                        <Globe size={14} />
+                   </div>
+               </div>
+               
                <div className="absolute bottom-6 left-6 z-10">
                  <h3 className="text-2xl font-bold text-black leading-none mb-1">Urban<br/>Exploration</h3>
                  <p className="text-zinc-600 text-sm">View Lookbook</p>
@@ -96,11 +103,24 @@ export const CraftedDaily: React.FC<CraftedDailyProps> = ({ onQuickView, onPlayV
                </div>
             </div>
 
-            {/* Card 3: Product Mobile */}
+            {/* Card 3: Product Mobile - UPDATED WITH ICONS */}
             <div onClick={() => onQuickView('crystal')} className="bg-white rounded-2xl aspect-square relative overflow-hidden block">
                 <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover" alt="Product" />
+                
+                {/* Added Metadata Icons for Mobile */}
+                <div className="absolute top-4 left-4 flex gap-2 z-20">
+                    <div className="w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-black" title="UV400">
+                        <Sun size={14} />
+                    </div>
+                </div>
+                <div className="absolute top-4 right-4 flex gap-2 z-20">
+                     <div className="w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center text-black" title="Ultralight">
+                        <Scale size={14} />
+                    </div>
+                </div>
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
+                <div className="absolute bottom-6 left-6 text-white z-20">
                    <p className="font-bold text-lg">Crystal Frame</p>
                    <p className="text-sm text-zinc-300">$249.00</p>
                 </div>
