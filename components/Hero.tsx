@@ -124,7 +124,7 @@ export const Hero: React.FC<HeroProps> = ({ onPlayVideo }) => {
            <Navigation size="1.2vw" className="text-blue-400" />
            <div>
               <p className="text-[0.8vw] text-white font-bold">Turn right in 200ft</p>
-              <p className="text-zinc-400 text-zinc-400">Broadway & 5th Ave</p>
+              <p className="text-[0.7vw] text-zinc-400">Broadway & 5th Ave</p>
            </div>
         </motion.div>
 
@@ -151,8 +151,7 @@ export const Hero: React.FC<HeroProps> = ({ onPlayVideo }) => {
          </div>
 
          <div className="relative z-10">
-            {/* UPDATED: Fluid typography to prevent breaking on small mobile screens */}
-            <h1 className="text-5xl sm:text-6xl font-bold tracking-tighter text-white leading-[0.9] mb-6">
+            <h1 className="text-6xl font-bold tracking-tighter text-white leading-[0.9] mb-6">
               VISION<br/>
               <span className="text-zinc-300">AUGMENTED</span>
             </h1>
