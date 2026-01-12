@@ -5,12 +5,13 @@ import { X } from 'lucide-react';
 interface VideoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  videoSrc: string | null;
 }
 
-export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
+export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoSrc }) => {
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && videoSrc && (
         <>
           <motion.div
             initial={{ opacity: 0 }}
@@ -40,13 +41,12 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="w-full max-w-[90vw] aspect-video bg-black relative overflow-hidden rounded-sm shadow-2xl"
             >
-               {/* Using a high-quality stock video as a placeholder for the brand film */}
                <video 
                  className="w-full h-full object-cover"
                  autoPlay 
                  controls 
                  playsInline
-                 src="https://cdn.coverr.co/videos/coverr-fashion-photoshoot-with-sunglasses-4886/1080p.mp4"
+                 src={videoSrc}
                >
                  Your browser does not support the video tag.
                </video>

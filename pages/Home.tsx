@@ -9,15 +9,30 @@ import { VideoModal } from '../components/VideoModal';
 import { PRODUCTS } from '../data';
 import { Product } from '../types';
 
+// VIDEO CONFIGURATION
+// These point to the files you uploaded to your "public/videos" folder
+const VIDEO_SOURCES = {
+  HERO: "/videos/hero.mp4",
+  PROCESS: "/videos/handcrafted.mp4"
+};
+
 export const Home: React.FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
   const handleQuickView = (productId: string) => {
     setSelectedProductId(productId);
   };
 
   const selectedProduct = selectedProductId ? PRODUCTS.find(p => p.id === selectedProductId) || null : null;
+
+  const openVideo = (src: string) => {
+    setVideoSrc(src);
+  };
+
+  const closeVideo = () => {
+    setVideoSrc(null);
+  };
 
   return (
     <main>
@@ -28,14 +43,15 @@ export const Home: React.FC = () => {
       />
       
       <VideoModal 
-        isOpen={isVideoOpen} 
-        onClose={() => setIsVideoOpen(false)} 
+        isOpen={!!videoSrc} 
+        onClose={closeVideo} 
+        videoSrc={videoSrc}
       />
 
-      <Hero onPlayVideo={() => setIsVideoOpen(true)} />
+      <Hero onPlayVideo={() => openVideo(VIDEO_SOURCES.HERO)} />
       <CraftedDaily 
         onQuickView={handleQuickView} 
-        onPlayVideo={() => setIsVideoOpen(true)}
+        onPlayVideo={() => openVideo(VIDEO_SOURCES.PROCESS)}
       />
       <CollectionBento />
       <CareBanner />
