@@ -3,6 +3,7 @@
 import React, { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, extend, ReactThreeFiber, useThree } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
+import { ErrorBoundary } from "react-error-boundary";
 import * as THREE from "three";
 
 // --- Shader Definition ---
@@ -139,6 +140,8 @@ interface LiquidHeroProps {
 }
 
 export default function LiquidHero({ className, image }: LiquidHeroProps) {
+  if (!image) return null;
+
   return (
     <div className={className}>
       <Canvas camera={{ position: [0, 0, 1] }}> 
@@ -148,9 +151,11 @@ export default function LiquidHero({ className, image }: LiquidHeroProps) {
          Let's stick to default Perspective but adjust FOV/Distance if needed.
          Actually, creating a full screen quad is easiest. 
       */}
-        <Suspense fallback={null}>
-          <Scene imagePath={image} />
-        </Suspense>
+        <ErrorBoundary fallback={<mesh><planeGeometry /><meshBasicMaterial color="pink" /></mesh>}>
+          <Suspense fallback={null}>
+            <Scene imagePath={image} />
+          </Suspense>
+        </ErrorBoundary>
       </Canvas>
     </div>
   );
