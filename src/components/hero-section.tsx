@@ -16,8 +16,8 @@ export default function HeroSection() {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       tl.fromTo(mainImageRef.current, 
-        { scale: 1.1, opacity: 0 },
-        { scale: 1, opacity: 0.7, duration: 2 }
+        { x: 100, opacity: 0 },
+        { x: 0, opacity: 0.6, duration: 2 }
       )
       .fromTo(titleRef.current?.querySelectorAll('.line'),
         { y: 120, opacity: 0 },
@@ -30,11 +30,11 @@ export default function HeroSection() {
         "-=0.5"
       );
 
-      // Continuous Subtle Zoom
+      // Continuous Subtle Motion
       gsap.to(mainImageRef.current, {
-        scale: 1.05,
-        duration: 20,
-        ease: "none",
+        x: -20,
+        duration: 10,
+        ease: "sine.inOut",
         repeat: -1,
         yoyo: true
       });
@@ -46,10 +46,10 @@ export default function HeroSection() {
 
   return (
     <section ref={containerRef} className="absolute top-0 left-0 w-[1600px] h-full overflow-hidden bg-black text-white">
-      {/* 1. Main Subject - Full Bleed Background (Quadrant 2 Focus) */}
+      {/* 1. Main Subject - Asymmetric Background (Right Side) */}
       <div 
         ref={mainImageRef}
-        className="absolute inset-0 z-0 overflow-hidden"
+        className="absolute top-0 right-0 w-[1000px] h-full z-0"
       >
         <Image 
           src="/pictures/hero-glasses.jpg" 
@@ -58,45 +58,51 @@ export default function HeroSection() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" />
       </div>
 
-      {/* 2. Hero Typography - Centered & Lowered to clear Logo */}
-      <div className="absolute top-[45%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full pointer-events-none">
-        <h1 ref={titleRef} className="font-display text-[210px] leading-[0.8] tracking-tighter uppercase mix-blend-difference">
-          <div className="overflow-hidden h-[170px]">
+      {/* 2. Hero Typography - Left Anchor */}
+      <div className="absolute top-[35%] left-[8%] z-10 pointer-events-none">
+        <h1 ref={titleRef} className="font-display text-[200px] leading-[0.75] tracking-tighter uppercase">
+          <div className="overflow-hidden h-[160px]">
             <span className="line inline-block">Vision</span>
           </div>
-          <div className="overflow-hidden h-[170px]">
+          <div className="overflow-hidden h-[160px] ml-48">
             <span className="line inline-block italic text-[#C5A880]">Refined</span>
           </div>
         </h1>
         
-        <div className="overflow-hidden mt-12 flex justify-center">
-          <p className="line max-w-lg font-sans text-[10px] tracking-[0.5em] text-white/50 leading-relaxed uppercase">
+        <div className="overflow-hidden mt-16 ml-52">
+          <p className="line max-w-sm font-sans text-[10px] tracking-[0.4em] text-white/40 leading-relaxed uppercase">
             Architecting the future of optics through <br/>
-            absolute geometric purity and technical materiality.
+            absolute geometric purity and <br/>
+            technical materiality.
           </p>
         </div>
       </div>
 
-      {/* 3. Refined HUD Elements */}
+      {/* 3. Refined HUD Elements - Positioned to clear the Navigation Logo */}
       <div ref={hudRef} className="absolute inset-0 pointer-events-none z-30">
-        <div className="hud-item absolute top-12 left-12 flex items-center gap-4">
+        {/* Top Left Label - Moved down to top-40 to clear LENXO logo */}
+        <div className="hud-item absolute top-40 left-12 flex items-center gap-4">
           <span className="w-8 h-[0.5px] bg-white/40"></span>
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Volume No. 01</span>
         </div>
 
+        {/* Bottom Right Label */}
         <div className="hud-item absolute bottom-12 right-12 flex items-center gap-4">
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Designed in California</span>
           <span className="w-8 h-[0.5px] bg-white/40"></span>
         </div>
+        
+        {/* Hairline Divider */}
+        <div className="hud-item absolute top-0 left-[25%] w-[0.5px] h-full bg-white/5"></div>
       </div>
 
       {/* CTA Button */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40">
-        <button className="group relative flex items-center gap-4 px-12 py-4 overflow-hidden rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:border-[#C5A880]">
-          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-colors group-hover:text-[#C5A880]">Enter Collection</span>
+      <div className="absolute bottom-12 left-[10%] z-40">
+        <button className="group relative flex items-center gap-4 px-10 py-4 overflow-hidden rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:border-[#C5A880]">
+          <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-colors group-hover:text-[#C5A880]">Explore Archive</span>
           <div className="w-1.5 h-1.5 rounded-full bg-[#C5A880] group-hover:scale-150 transition-transform"></div>
         </button>
       </div>
