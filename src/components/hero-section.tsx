@@ -67,10 +67,10 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" />
       </div>
 
-      {/* Secondary Image - Asymmetric Tension (Quadrant 4) */}
+      {/* Secondary Image - Now on the Right to balance the left-aligned text */}
       <div 
         ref={secondaryImageRef}
-        className="absolute bottom-20 left-[10%] w-[380px] h-[480px] z-20 overflow-hidden border border-white/10"
+        className="absolute bottom-24 right-[12%] w-[420px] h-[540px] z-20 overflow-hidden border border-white/10 shadow-2xl"
       >
         <Image 
           src="/pictures/hero-fashion.jpg" 
@@ -78,23 +78,26 @@ export default function HeroSection() {
           fill 
           className="object-cover scale-110"
         />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
-      {/* Hero Typography - Intersecting with Main Image */}
-      <div className="absolute top-[35%] left-[5%] z-10 pointer-events-none">
-        <h1 ref={titleRef} className="font-display text-[180px] leading-[0.8] tracking-tighter uppercase">
-          <div className="overflow-hidden h-[150px]">
+      {/* Hero Typography - Now has clear space on the left */}
+      <div className="absolute top-[30%] left-[8%] z-10 pointer-events-none">
+        <h1 ref={titleRef} className="font-display text-[200px] leading-[0.75] tracking-tighter uppercase">
+          <div className="overflow-hidden h-[160px]">
             <span className="line inline-block">Vision</span>
           </div>
-          <div className="overflow-hidden h-[150px] ml-40">
+          <div className="overflow-hidden h-[160px] ml-48">
             <span className="line inline-block italic text-[#C5A880]">Refined</span>
           </div>
         </h1>
         
-        <p className="mt-12 ml-44 max-w-sm font-sans text-sm tracking-wide text-white/60 leading-relaxed uppercase">
-          Precision optics met with absolute geometric purity. <br/>
-          A study in lightweight architecture for the human form.
-        </p>
+        <div className="overflow-hidden mt-16 ml-52">
+          <p className="line max-w-sm font-sans text-xs tracking-[0.3em] text-white/50 leading-relaxed uppercase">
+            Precision optics met with absolute geometric purity. <br/>
+            A study in lightweight architecture for the human form.
+          </p>
+        </div>
       </div>
 
       {/* Refined HUD Elements - Golden Ratio Anchors */}
