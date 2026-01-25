@@ -6,36 +6,45 @@ import { gsap } from 'gsap';
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
+  const mainImageRef = useRef<HTMLDivElement>(null);
+  const secondaryImageRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const hudRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-        // 1. Image Intro & Continuous Zoom
-        gsap.fromTo(imageRef.current, 
-            { scale: 1.1, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" }
-        );
+      // Intro Animation
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-        gsap.to(imageRef.current, {
-            scale: 1.05,
-            duration: 20,
-            ease: "none",
-            repeat: -1,
-            yoyo: true,
-            delay: 1.5
-        });
+      tl.fromTo(mainImageRef.current, 
+        { scale: 1.2, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 2 }
+      )
+      .fromTo(secondaryImageRef.current,
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.5 },
+        "-=1.5"
+      )
+      .fromTo(titleRef.current?.querySelectorAll('.line'),
+        { y: 120, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.2, stagger: 0.1 },
+        "-=1"
+      )
+      .fromTo(hudRef.current?.querySelectorAll('.hud-item'),
+        { opacity: 0 },
+        { opacity: 1, duration: 1, stagger: 0.1 },
+        "-=0.5"
+      );
 
-        // 2. Text Reveal
-        const tl = gsap.timeline({ delay: 0.5 });
-        const chars = textRef.current?.querySelectorAll('.char');
-        
-        if (chars) {
-            tl.fromTo(chars, 
-                { y: 100, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1, stagger: 0.05, ease: "power4.out" }
-            );
-        }
+      // Continuous Subtle Motion
+      gsap.to(mainImageRef.current, {
+        y: -20,
+        duration: 8,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true
+      });
+
     }, containerRef);
 
     return () => ctx.revert();
@@ -43,60 +52,76 @@ export default function HeroSection() {
 
   return (
     <section ref={containerRef} className="absolute top-0 left-0 w-[1600px] h-full overflow-hidden bg-black text-white">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0 opacity-80">
-        <Image 
-            ref={imageRef as any}
-            src="/pictures/hero-glasses.jpg" 
-            alt="Absolute Vision" 
-            fill 
-            className="object-cover"
-            priority
-        />
-        <div className="absolute inset-0 bg-black/20" /> {/* Cinematic tint */}
-      </div>
-
-      {/* Hero Typography - Centered Absolute */}
+      {/* Background - Main Image (Quadrant 2-3) */}
       <div 
-        ref={textRef}
-        className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full"
+        ref={mainImageRef}
+        className="absolute top-0 right-0 w-[1000px] h-full z-0 opacity-60"
       >
-        <h1 className="font-display text-[160px] leading-[0.85] tracking-tighter uppercase mix-blend-difference">
-            <div className="overflow-hidden h-[140px]">
-                <span className="char inline-block">V</span>
-                <span className="char inline-block">I</span>
-                <span className="char inline-block">S</span>
-                <span className="char inline-block">I</span>
-                <span className="char inline-block">O</span>
-                <span className="char inline-block">N</span>
-            </div>
-            <div className="overflow-hidden h-[140px] mt-2">
-                <span className="char inline-block italic text-[#C5A880]">R</span>
-                <span className="char inline-block italic text-[#C5A880]">E</span>
-                <span className="char inline-block italic text-[#C5A880]">F</span>
-                <span className="char inline-block italic text-[#C5A880]">I</span>
-                <span className="char inline-block italic text-[#C5A880]">N</span>
-                <span className="char inline-block italic text-[#C5A880]">E</span>
-                <span className="char inline-block italic text-[#C5A880]">D</span>
-            </div>
+        <Image 
+          src="/pictures/hero-glasses.jpg" 
+          alt="Absolute Vision" 
+          fill 
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" />
+      </div>
+
+      {/* Secondary Image - Asymmetric Tension (Quadrant 4) */}
+      <div 
+        ref={secondaryImageRef}
+        className="absolute bottom-20 left-[10%] w-[380px] h-[480px] z-20 overflow-hidden border border-white/10"
+      >
+        <Image 
+          src="/pictures/hero-fashion.jpg" 
+          alt="Detail" 
+          fill 
+          className="object-cover scale-110"
+        />
+      </div>
+
+      {/* Hero Typography - Intersecting with Main Image */}
+      <div className="absolute top-[35%] left-[5%] z-10 pointer-events-none">
+        <h1 ref={titleRef} className="font-display text-[180px] leading-[0.8] tracking-tighter uppercase">
+          <div className="overflow-hidden h-[150px]">
+            <span className="line inline-block">Vision</span>
+          </div>
+          <div className="overflow-hidden h-[150px] ml-40">
+            <span className="line inline-block italic text-[#C5A880]">Refined</span>
+          </div>
         </h1>
+        
+        <p className="mt-12 ml-44 max-w-sm font-sans text-sm tracking-wide text-white/60 leading-relaxed uppercase">
+          Precision optics met with absolute geometric purity. <br/>
+          A study in lightweight architecture for the human form.
+        </p>
       </div>
 
-      {/* HUD Elements */}
-      <div className="absolute bottom-12 left-12 z-20 flex flex-col gap-2">
-         <div className="w-12 h-[1px] bg-white/50 mb-4"></div>
-         <span className="font-mono text-xs tracking-widest uppercase text-white/70">
-            Est. 2026
-         </span>
-         <span className="font-mono text-xs tracking-widest uppercase text-white/70">
-            California
-         </span>
+      {/* Refined HUD Elements - Golden Ratio Anchors */}
+      <div ref={hudRef} className="absolute inset-0 pointer-events-none z-30">
+        {/* Top Left Label */}
+        <div className="hud-item absolute top-12 left-12 flex items-center gap-4">
+          <span className="w-8 h-[0.5px] bg-white/40"></span>
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Volume No. 01</span>
+        </div>
+
+        {/* Bottom Right Label */}
+        <div className="hud-item absolute bottom-12 right-12 flex items-center gap-4">
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Designed in California</span>
+          <span className="w-8 h-[0.5px] bg-white/40"></span>
+        </div>
+
+        {/* Diagonal hairlines for "Magazine" structure */}
+        <div className="hud-item absolute top-[20%] left-[45%] w-[1px] h-40 bg-gradient-to-b from-white/20 to-transparent"></div>
+        <div className="hud-item absolute bottom-[15%] right-[40%] w-40 h-[1px] bg-gradient-to-l from-white/20 to-transparent"></div>
       </div>
 
-      <div className="absolute bottom-12 right-12 z-20">
-         <button className="px-8 py-3 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-sm font-medium tracking-wide hover:bg-white hover:text-black transition-colors duration-300">
-            EXPLORE COLLECTION
-         </button>
+      {/* CTA Button */}
+      <div className="absolute bottom-12 left-[10%] z-40">
+        <button className="group relative flex items-center gap-4 px-10 py-4 overflow-hidden rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:border-[#C5A880]">
+          <span className="font-sans text-xs font-bold tracking-[0.2em] uppercase transition-colors group-hover:text-[#C5A880]">Explore Series</span>
+          <div className="w-2 h-2 rounded-full bg-[#C5A880] group-hover:scale-150 transition-transform"></div>
+        </button>
       </div>
     </section>
   );

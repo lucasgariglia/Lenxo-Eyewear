@@ -5,144 +5,229 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function EditorialContent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-        // Parallax Images
-        gsap.utils.toArray<HTMLElement>('.parallax-img').forEach((img) => {
-            gsap.to(img, {
-                yPercent: -10, // Slight upward movement
-                ease: "none",
-                scrollTrigger: {
-                    trigger: img.parentElement,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true,
-                }
-            });
+      // 1. Smooth Parallax for all layers
+      gsap.utils.toArray<HTMLElement>('.parallax-layer-1').forEach((el) => {
+        gsap.to(el, {
+          yPercent: -20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
         });
+      });
+
+      gsap.utils.toArray<HTMLElement>('.parallax-layer-2').forEach((el) => {
+        gsap.to(el, {
+          yPercent: -40,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el.parentElement,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        });
+      });
+
+      // 2. Headline Reveal on Scroll
+      gsap.from('.reveal-text', {
+        y: 100,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power4.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.reveal-text',
+          start: "top 90%",
+        }
+      });
+
+      // 3. Image Scale Reveal
+      gsap.utils.toArray<HTMLElement>('.image-reveal').forEach((el) => {
+        gsap.from(el, {
+          scale: 1.2,
+          opacity: 0,
+          duration: 2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+          }
+        });
+      });
+
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-[1600px] bg-[#FAFAFA] text-black overflow-hidden pb-40">
+    <div ref={containerRef} className="relative w-[1600px] bg-[#FAFAFA] text-black overflow-hidden pb-60">
+      
+      {/* --- SPREAD 1: THE ASYMMETRIC OPENER --- */}
+      <section className="relative h-[1600px] w-full px-20 pt-40">
+        {/* Secondary HUD Hairline */}
+        <div className="absolute top-40 left-20 w-[1px] h-[800px] bg-black/5 z-0"></div>
         
-        {/* Section 1: Introduction (Grid) */}
-        <div className="relative h-[1200px] w-full pt-32 px-12">
-            {/* Big Headline */}
-            <h2 className="font-display text-[120px] leading-[0.9] tracking-tighter uppercase absolute top-32 left-12 z-10 mix-blend-difference text-black">
-                Designed <br/> 
-                <span className="ml-32 italic text-[#C5A880]">For Vision</span>
-            </h2>
-
-            {/* Floating Image 1 (Top Right) */}
-            <div className="absolute top-20 right-20 w-[500px] h-[600px] overflow-hidden bg-gray-200">
-                <Image 
-                    src="/pictures/col-tortoise.jpg" 
-                    alt="Tortoise Shell" 
-                    fill 
-                    className="object-cover parallax-img scale-110" 
-                />
-            </div>
-
-            {/* Floating Image 2 (Bottom Left overlap) */}
-            <div className="absolute top-[600px] left-[200px] w-[400px] h-[500px] overflow-hidden bg-gray-300 z-20 shadow-2xl">
-                 <Image 
-                    src="/pictures/hero-fashion.jpg" 
-                    alt="Fashion" 
-                    fill 
-                    className="object-cover parallax-img scale-110" 
-                />
-            </div>
-
-            {/* Descriptive Text */}
-            <div className="absolute top-[800px] right-[200px] w-[400px]">
-                <h3 className="font-display text-4xl mb-6">Crafted for Daily Life</h3>
-                <p className="font-sans text-lg text-gray-600 leading-relaxed">
-                    From lightweight frames to precise lenses, our goal is simple: eyewear that disappears the moment you put it on, letting you focus on life.
-                </p>
-                <button className="mt-8 px-8 py-3 bg-black text-white rounded-full text-sm font-medium hover:bg-[#C5A880] transition-colors">
-                    Learn More
-                </button>
-            </div>
+        {/* Main Spread Image - Offset Quadrant */}
+        <div className="absolute top-20 right-20 w-[600px] h-[800px] overflow-hidden bg-gray-100 z-10">
+          <Image 
+            src="/pictures/hero-minimal.jpg" 
+            alt="Editorial Eyewear" 
+            fill 
+            className="object-cover image-reveal parallax-layer-1" 
+          />
         </div>
 
-        {/* Section 2: The Grid Collection */}
-        <div className="relative w-full px-12 mt-20">
-            <div className="w-full border-t border-black/10 mb-12"></div>
-            <div className="flex justify-between items-end mb-16">
-                <h2 className="font-display text-[80px] leading-none uppercase">Our <br/> Collections</h2>
-                <span className="font-mono text-xs uppercase tracking-widest mb-4">Fall / Winter 2026</span>
+        {/* Asymmetric Headline - Intersecting with Layer 1 */}
+        <div className="relative z-20 mt-60">
+          <h2 className="font-display text-[140px] leading-[0.8] tracking-tighter uppercase mix-blend-difference text-black">
+            <div className="overflow-hidden h-[120px]">
+              <span className="reveal-text inline-block">The New</span>
             </div>
-
-            {/* The Grid */}
-            <div className="grid grid-cols-3 gap-8 h-[800px]">
-                {/* Item 1 - Yellow/Bold */}
-                <div className="col-span-1 relative bg-[#E8E8E8] group cursor-pointer overflow-hidden">
-                    <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
-                        <span className="font-mono text-xs uppercase">Luminous</span>
-                        <div className="w-10 h-10 rounded-full border border-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="material-icons-outlined text-sm">arrow_forward</span>
-                        </div>
-                    </div>
-                     <Image 
-                        src="/pictures/col-yellow.jpg" 
-                        alt="Yellow" 
-                        fill 
-                        className="object-cover transition-transform duration-700 group-hover:scale-105" 
-                    />
-                </div>
-
-                {/* Item 2 - Central Focus */}
-                <div className="col-span-1 relative bg-[#C5A880] group cursor-pointer overflow-hidden">
-                     <Image 
-                        src="/pictures/hero-shoe.jpg" // Fallback aesthetic
-                        alt="Crystal" 
-                        fill 
-                        className="object-cover mix-blend-multiply opacity-80" 
-                    />
-                     <div className="absolute inset-0 flex items-center justify-center">
-                        <Image src="/pictures/hero-glasses.jpg" alt="Glasses" width={300} height={200} className="drop-shadow-2xl" />
-                     </div>
-                     <div className="absolute bottom-8 left-8">
-                        <h3 className="font-display text-2xl text-white">The Crystal Series</h3>
-                     </div>
-                </div>
-
-                 {/* Item 3 - Classic */}
-                <div className="col-span-1 relative bg-[#000000] text-white group cursor-pointer overflow-hidden">
-                    <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
-                        <span className="font-mono text-xs uppercase text-gray-400">Obsidian</span>
-                    </div>
-                     <Image 
-                        src="/pictures/collection-3.jpg" 
-                        alt="Obsidian" 
-                        fill 
-                        className="object-cover opacity-60 transition-opacity duration-500 group-hover:opacity-80" 
-                    />
-                </div>
+            <div className="overflow-hidden h-[120px] ml-40">
+              <span className="reveal-text inline-block italic text-[#C5A880]">Language</span>
             </div>
+            <div className="overflow-hidden h-[120px] ml-10">
+              <span className="reveal-text inline-block">Of Vision</span>
+            </div>
+          </h2>
         </div>
 
-        {/* Section 3: Full Width Statement */}
-        <div className="relative w-full h-[800px] mt-32 overflow-hidden bg-orange-500">
+        {/* Floating Detail Image - quadrant 3 overlap */}
+        <div className="absolute top-[800px] left-[15%] w-[400px] h-[540px] overflow-hidden z-30 shadow-2xl border-[16px] border-white">
+          <Image 
+            src="/pictures/editorial-portrait.jpg" 
+            alt="Portrait" 
+            fill 
+            className="object-cover parallax-layer-2" 
+          />
+        </div>
+
+        {/* Floating Caption Spread */}
+        <div className="absolute top-[1000px] right-[10%] w-[380px] z-20">
+          <div className="flex items-center gap-4 mb-8">
+            <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C5A880]">Technical Insight</span>
+            <div className="flex-grow h-[0.5px] bg-black/20"></div>
+          </div>
+          <h3 className="font-display text-4xl mb-6 uppercase leading-tight">Lightness as a <br/> Philosophy</h3>
+          <p className="font-sans text-sm text-gray-500 leading-relaxed tracking-wide">
+            Our frames weigh less than a standard envelope. By removing the unnecessary, we expose the essential beauty of your features.
+          </p>
+          <div className="mt-10 flex items-center gap-6">
+            <button className="font-mono text-[10px] tracking-[0.3em] uppercase border-b border-black pb-1 hover:text-[#C5A880] hover:border-[#C5A880] transition-colors">
+              Explore Craft
+            </button>
+            <span className="text-gray-300">/</span>
+            <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-gray-400">Page 04</span>
+          </div>
+        </div>
+      </section>
+
+      {/* --- SPREAD 2: THE MATERIAL GRID --- */}
+      <section className="relative w-full px-20 mt-40">
+        <div className="flex justify-between items-start mb-32">
+          <div className="max-w-md">
+            <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-black/40 mb-4 block">Series 02 / Materiality</span>
+            <h2 className="font-display text-7xl uppercase leading-none">A Synthesis of <br/> Glass & Steel</h2>
+          </div>
+          <div className="text-right">
+             <span className="font-display text-xl italic text-[#C5A880] block mb-2">Curated Collection</span>
+             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-gray-400">Available Fall 2026</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-12 gap-10">
+          {/* Main Feature - 7 columns */}
+          <div className="col-span-7 relative h-[900px] overflow-hidden group cursor-pointer bg-gray-100">
              <Image 
-                src="/pictures/hero-stitch.jpg" 
-                alt="Statement" 
-                fill 
-                className="object-cover" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent flex items-center px-20">
-                <h2 className="font-display text-[100px] leading-none text-white max-w-4xl">
-                    Your Eyes <br/>
-                    <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Deserve Better</span>
-                </h2>
+               src="/pictures/col-modern.jpg" 
+               alt="Modern" 
+               fill 
+               className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+             />
+             <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+             <div className="absolute bottom-12 left-12 text-white z-10">
+                <span className="font-mono text-[10px] tracking-[0.3em] uppercase mb-2 block">Item 01 / Obsidian</span>
+                <h3 className="font-display text-5xl uppercase">The Archon</h3>
+             </div>
+          </div>
+
+          {/* Side Stack - 5 columns */}
+          <div className="col-span-5 flex flex-col gap-10">
+            <div className="relative h-[430px] overflow-hidden group cursor-pointer bg-gray-100">
+               <Image 
+                 src="/pictures/col-lifestyle.jpg" 
+                 alt="Lifestyle" 
+                 fill 
+                 className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+               />
+               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 backdrop-blur-sm">
+                  <span className="font-mono text-[10px] tracking-[0.5em] uppercase text-black bg-white px-6 py-3 rounded-full">View Piece</span>
+               </div>
             </div>
+            
+            <div className="relative h-[430px] bg-[#0E2A47] p-12 flex flex-col justify-between text-white">
+               <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40">Technical Specs</span>
+               <div>
+                  <h4 className="font-display text-3xl mb-4 uppercase">Bio-Titanium <br/> Construction</h4>
+                  <p className="font-sans text-xs text-white/60 leading-relaxed uppercase tracking-widest">
+                    Unparalleled strength-to-weight ratio. <br/>
+                    Hypoallergenic coating. <br/>
+                    Laser-etched serial numbers.
+                  </p>
+               </div>
+               <div className="w-12 h-[1px] bg-white/20"></div>
+            </div>
+          </div>
         </div>
+      </section>
+
+      {/* --- SPREAD 3: THE CINEMATIC STATEMENT --- */}
+      <section className="relative w-full h-[1000px] mt-60 overflow-hidden group">
+        <Image 
+          src="/pictures/hero-shoe.jpg" 
+          alt="Statement" 
+          fill 
+          className="object-cover parallax-layer-1 grayscale hover:grayscale-0 transition-all duration-1000 scale-110" 
+        />
+        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-40">
+          <span className="font-mono text-[12px] tracking-[0.6em] uppercase text-[#C5A880] mb-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-4 group-hover:translate-y-0">
+            The Final Word
+          </span>
+          <h2 className="font-display text-[120px] leading-none text-white uppercase max-w-5xl">
+            See the World <br/>
+            <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-[#C5A880] to-white">Without Obstruction</span>
+          </h2>
+          <div className="mt-20 flex gap-12">
+            <div className="flex flex-col items-center gap-4">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/40">Collection</span>
+              <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-white">Full Series</span>
+            </div>
+            <div className="w-[1px] h-12 bg-white/10"></div>
+            <div className="flex flex-col items-center gap-4">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/40">Retailers</span>
+              <span className="font-sans text-xs font-bold uppercase tracking-[0.2em] text-white">Find a Boutique</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Pull-in */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-center pointer-events-none">
+        <span className="font-mono text-[10px] tracking-[1em] uppercase text-black/20 block mb-4">Scrolling down to</span>
+        <h5 className="font-display text-2xl uppercase tracking-tighter">Information Architecture</h5>
+      </div>
     </div>
   );
 }
