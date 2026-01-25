@@ -87,29 +87,41 @@ declare global {
 const Scene = ({ imagePath }: { imagePath: string }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const { viewport } = useThree(); // Get current viewport dimensions in 3D units
   
   // Load texture
   const texture = useTexture(imagePath);
   
-  // Fix texture aspect ratio (cover logic equivalent)
-  const { width, height } = texture.image;
+  // Calculate "Cover" Scale
+  // 1. Image Aspect Ratio
+  const imgRatio = texture.image.width / texture.image.height;
+  // 2. Viewport Aspect Ratio
+  const viewportRatio = viewport.width / viewport.height;
   
-  // Viewport is normalized in R3F by default if we use a Plane covering screen?
-  // Actually, simpler to just use a standard Plane and scale it.
-  // For this demo, we assume the plane fills the view.
+  // 3. Determine scale to cover
+  // If viewport is wider than image, fit to width. Else fit to height.
+  // We scale the plane geometry to match viewport, then adjust UVs or scale mesh?
+  // Easier approach: Scale the mesh to be larger than viewport to cover it.
+  
+  let scaleX = viewport.width;
+  let scaleY = viewport.height;
+
+  if (viewportRatio > imgRatio) {
+     // Viewport is wider than image -> match width, zoom height
+     scaleY = viewport.width / imgRatio;
+  } else {
+     // Viewport is taller than image -> match height, zoom width
+     scaleX = viewport.height * imgRatio;
+  }
 
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime() * 0.5;
-      // We could hook up uHover to mouse position here for interaction
     }
   });
 
   return (
-    <mesh ref={meshRef} scale={[16, 9, 1]}> 
-      {/* Aspect ratio 16:9 roughly to cover our 1600px stage usually, 
-          but best is to measure viewport. For strict absolute engine, 
-          we can hardcode a large plane that covers the 1600x900 stage. */}
+    <mesh ref={meshRef} scale={[scaleX, scaleY, 1]}> 
       <planeGeometry args={[1, 1, 32, 32]} />
       <liquidDistortionMaterial
         ref={materialRef}
