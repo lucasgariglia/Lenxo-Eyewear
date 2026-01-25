@@ -4,7 +4,6 @@ import React, { useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import LiquidHero from './liquid-hero';
 
 export default function EditorialContent() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,13 +11,12 @@ export default function EditorialContent() {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
         // Parallax Images
-        // Note: For WebGL, we might need to animate the container instead of the img tag
-        gsap.utils.toArray<HTMLElement>('.parallax-wrapper').forEach((wrapper) => {
-            gsap.to(wrapper, {
+        gsap.utils.toArray<HTMLElement>('.parallax-img').forEach((img) => {
+            gsap.to(img, {
                 yPercent: -10, // Slight upward movement
                 ease: "none",
                 scrollTrigger: {
-                    trigger: wrapper.parentElement,
+                    trigger: img.parentElement,
                     start: "top bottom",
                     end: "bottom top",
                     scrub: true,
@@ -41,19 +39,23 @@ export default function EditorialContent() {
                 <span className="ml-32 italic text-[#C5A880]">For Vision</span>
             </h2>
 
-            {/* Floating Image 1 (Top Right) - WebGL Upgrade */}
-            <div className="absolute top-20 right-20 w-[500px] h-[600px] overflow-hidden bg-gray-200 parallax-wrapper">
-                <LiquidHero 
-                    image="/pictures/col-tortoise.jpg" 
-                    className="w-full h-full"
+            {/* Floating Image 1 (Top Right) */}
+            <div className="absolute top-20 right-20 w-[500px] h-[600px] overflow-hidden bg-gray-200">
+                <Image 
+                    src="/pictures/col-tortoise.jpg" 
+                    alt="Tortoise Shell" 
+                    fill 
+                    className="object-cover parallax-img scale-110" 
                 />
             </div>
 
-            {/* Floating Image 2 (Bottom Left overlap) - WebGL Upgrade */}
-            <div className="absolute top-[600px] left-[200px] w-[400px] h-[500px] overflow-hidden bg-gray-300 z-20 shadow-2xl parallax-wrapper">
-                 <LiquidHero 
-                    image="/pictures/hero-fashion.jpg" 
-                    className="w-full h-full"
+            {/* Floating Image 2 (Bottom Left overlap) */}
+            <div className="absolute top-[600px] left-[200px] w-[400px] h-[500px] overflow-hidden bg-gray-300 z-20 shadow-2xl">
+                 <Image 
+                    src="/pictures/hero-fashion.jpg" 
+                    alt="Fashion" 
+                    fill 
+                    className="object-cover parallax-img scale-110" 
                 />
             </div>
 

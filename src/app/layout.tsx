@@ -1,8 +1,5 @@
 import type {Metadata} from 'next';
 import { Toaster } from "@/components/ui/toaster";
-import Preloader from "@/components/preloader";
-import CustomCursor from "@/components/custom-cursor";
-import SoundToggle from "@/components/sound-toggle";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,10 +20,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
       </head>
-      <body className="font-sans bg-background text-foreground antialiased cursor-none">
-        <Preloader />
-        <CustomCursor />
-        <SoundToggle />
+      <body className="font-sans bg-background text-foreground antialiased">
         {children}
         <Toaster />
       </body>

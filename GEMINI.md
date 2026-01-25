@@ -14,21 +14,5 @@ Adaptive HUD (Golden Ratio Snap): HUD elements must calculate position based on 
 4. ASSET PIPELINE:
 Storage: All media must go to /public/pictures/ or /public/videos/.
 Automation: Use node scripts/download-media.js <URL> <FILENAME> for all external assets.
-5. IMMERSIVE LAYERS (AWARD-WINNING CRITERIA)
-The "First 3 Seconds" (Loading):
-   - Strategy: "Curtain" Preloader.
-   - Implementation: Hold global scroll (Lenis stop) until assets load. Reveal via GSAP timeline (shutter open/typography scale).
-   - Goal: Turn waiting into storytelling.
-Micro-Interactions & Cursor:
-   - Contextual States: Cursor morphs on hover (e.g., "View", "Explore" text).
-   - Magnetic Pull: UI elements physically attract to the cursor.
-   - Blend Modes: Ensure visibility over video/dark content.
-WebGL / Distortion (The X-Factor):
-   - Logic: Use WebGL planes for primary imagery instead of standard DOM img tags where possible.
-   - Effect: Apply subtle "liquid" distortion or RGB shift based on scroll velocity.
-   - Goal: Make the site feel reactive and alive, not static.
-Sound Design (Audio):
-   - Subtlety: Extremely quiet, high-quality clicks/ticks on interaction (HUD, pills).
-   - Control: Visible "Sound On/Off" toggle in Navbar.
-6. COLLABORATION "GO" LOCK:
+5. COLLABORATION "GO" LOCK:
 Mode: Strategic Discussion. Analyze the current GEMINI.md, provide feedback for "Award-Winning" improvements, and wait for "GO" before outputting code.

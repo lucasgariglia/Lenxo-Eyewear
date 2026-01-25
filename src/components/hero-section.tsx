@@ -1,18 +1,31 @@
 "use client";
 
 import React, { useLayoutEffect, useRef } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
-import LiquidHero from './liquid-hero';
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-        // 1. Image Intro & Continuous Zoom -> Handled by WebGL now internally or we can animate the container
-        // Keeping container fade-in for smoothness
-        
+        // 1. Image Intro & Continuous Zoom
+        gsap.fromTo(imageRef.current, 
+            { scale: 1.1, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 1.5, ease: "power2.out" }
+        );
+
+        gsap.to(imageRef.current, {
+            scale: 1.05,
+            duration: 20,
+            ease: "none",
+            repeat: -1,
+            yoyo: true,
+            delay: 1.5
+        });
+
         // 2. Text Reveal
         const tl = gsap.timeline({ delay: 0.5 });
         const chars = textRef.current?.querySelectorAll('.char');
@@ -30,19 +43,23 @@ export default function HeroSection() {
 
   return (
     <section ref={containerRef} className="absolute top-0 left-0 w-[1600px] h-full overflow-hidden bg-black text-white">
-      {/* Background Image (WebGL Liquid Effect) */}
-      <div className="absolute inset-0 z-0">
-        <LiquidHero 
-            image="/pictures/hero-glasses.jpg" 
-            className="w-full h-full"
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0 opacity-80">
+        <Image 
+            ref={imageRef as any}
+            src="/pictures/hero-glasses.jpg" 
+            alt="Absolute Vision" 
+            fill 
+            className="object-cover"
+            priority
         />
-        <div className="absolute inset-0 bg-black/20 pointer-events-none" /> {/* Cinematic tint */}
+        <div className="absolute inset-0 bg-black/20" /> {/* Cinematic tint */}
       </div>
 
       {/* Hero Typography - Centered Absolute */}
       <div 
         ref={textRef}
-        className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full pointer-events-none"
+        className="absolute top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full"
       >
         <h1 className="font-display text-[160px] leading-[0.85] tracking-tighter uppercase mix-blend-difference">
             <div className="overflow-hidden h-[140px]">
@@ -77,7 +94,7 @@ export default function HeroSection() {
       </div>
 
       <div className="absolute bottom-12 right-12 z-20">
-         <button className="px-8 py-3 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-sm font-medium tracking-wide hover:bg-white hover:text-black transition-colors duration-300 pointer-events-auto">
+         <button className="px-8 py-3 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-sm font-medium tracking-wide hover:bg-white hover:text-black transition-colors duration-300">
             EXPLORE COLLECTION
          </button>
       </div>
