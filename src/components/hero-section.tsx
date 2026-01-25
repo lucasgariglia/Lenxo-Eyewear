@@ -89,18 +89,18 @@ export default function HeroSection() {
           <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Volume No. 01</span>
         </div>
 
-        {/* Bottom Right Label */}
-        <div className="hud-item absolute bottom-12 right-12 flex items-center gap-4">
-          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Designed in California</span>
+        {/* Bottom Left Label - Moved from right to clear the CTA button */}
+        <div className="hud-item absolute bottom-12 left-12 flex items-center gap-4">
           <span className="w-8 h-[0.5px] bg-white/40"></span>
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Designed in California</span>
         </div>
         
         {/* Hairline Divider */}
         <div className="hud-item absolute top-0 left-[25%] w-[0.5px] h-full bg-white/5"></div>
       </div>
 
-      {/* CTA Button - Moved to Bottom Right to clear typography and balance layout */}
-      <div className="absolute bottom-12 right-[8%] z-40">
+      {/* CTA Button - Moved further right to clear all HUD elements */}
+      <div className="absolute bottom-12 right-[5%] z-40">
         <button className="group relative flex items-center gap-4 px-10 py-4 overflow-hidden rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:border-[#C5A880] pointer-events-auto">
           <span className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-colors group-hover:text-[#C5A880]">Explore Archive</span>
           <div className="w-1.5 h-1.5 rounded-full bg-[#C5A880] group-hover:scale-150 transition-transform"></div>
