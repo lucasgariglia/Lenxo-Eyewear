@@ -52,50 +52,50 @@ export default function HeroSection() {
 
   return (
     <section ref={containerRef} className="absolute top-0 left-0 w-[1600px] h-full overflow-hidden bg-black text-white">
-      {/* Background - Main Image (Quadrant 2-3) */}
+      {/* 1. Main Subject - The Glasses (Quadrant 2) */}
       <div 
         ref={mainImageRef}
-        className="absolute top-0 right-0 w-[1000px] h-full z-0 opacity-60"
+        className="absolute top-20 right-20 w-[800px] h-[500px] z-0 overflow-hidden border border-white/5"
       >
         <Image 
           src="/pictures/hero-glasses.jpg" 
           alt="Absolute Vision" 
           fill 
-          className="object-cover"
+          className="object-cover opacity-80"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </div>
 
-      {/* Secondary Image - Now on the Right to balance the left-aligned text */}
+      {/* 2. Secondary Subject - The Model (Quadrant 4) */}
       <div 
         ref={secondaryImageRef}
-        className="absolute bottom-24 right-[12%] w-[420px] h-[540px] z-20 overflow-hidden border border-white/10 shadow-2xl"
+        className="absolute bottom-20 right-[450px] w-[340px] h-[440px] z-20 overflow-hidden border border-white/10 shadow-2xl"
       >
         <Image 
           src="/pictures/hero-fashion.jpg" 
           alt="Detail" 
           fill 
-          className="object-cover scale-110"
+          className="object-cover scale-110 opacity-90"
         />
-        <div className="absolute inset-0 bg-black/10" />
       </div>
 
-      {/* Hero Typography - Now has clear space on the left */}
-      <div className="absolute top-[30%] left-[8%] z-10 pointer-events-none">
-        <h1 ref={titleRef} className="font-display text-[200px] leading-[0.75] tracking-tighter uppercase">
-          <div className="overflow-hidden h-[160px]">
+      {/* 3. Hero Typography - Left Anchor (Quadrant 1 & 3) */}
+      <div className="absolute top-[25%] left-[6%] z-10 pointer-events-none">
+        <h1 ref={titleRef} className="font-display text-[190px] leading-[0.75] tracking-tighter uppercase">
+          <div className="overflow-hidden h-[150px]">
             <span className="line inline-block">Vision</span>
           </div>
-          <div className="overflow-hidden h-[160px] ml-48">
+          <div className="overflow-hidden h-[150px] ml-32">
             <span className="line inline-block italic text-[#C5A880]">Refined</span>
           </div>
         </h1>
         
-        <div className="overflow-hidden mt-16 ml-52">
-          <p className="line max-w-sm font-sans text-xs tracking-[0.3em] text-white/50 leading-relaxed uppercase">
-            Precision optics met with absolute geometric purity. <br/>
-            A study in lightweight architecture for the human form.
+        <div className="overflow-hidden mt-24 ml-36">
+          <p className="line max-w-sm font-sans text-[10px] tracking-[0.4em] text-white/40 leading-relaxed uppercase">
+            Architecting the future of optics through <br/>
+            absolute geometric purity and <br/>
+            technical materiality.
           </p>
         </div>
       </div>
