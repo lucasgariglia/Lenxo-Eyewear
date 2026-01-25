@@ -10,11 +10,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
         headline: ['Playfair Display', 'serif'],
-        code: ['monospace'],
+        display: ['Playfair Display', 'serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+        code: ['JetBrains Mono', 'monospace'],
+        cinzel: ['Cinzel', 'serif'],
       },
       colors: {
+        // Keeping existing utility maps for compatibility
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -78,10 +83,30 @@ export default {
             height: '0',
           },
         },
+        'slow-pan': {
+          '0%': { transform: 'scale(1.2)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        'fade-in-down': {
+          '0%': { opacity: '0', transform: 'translateY(-50px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(50px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        marquee: {
+            '0%': { transform: 'translateX(0)' },
+            '100%': { transform: 'translateX(-50%)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'slow-pan': 'slow-pan 20s ease-out forwards',
+        'fade-in-down': 'fade-in-down 1.5s ease-out forwards',
+        'fade-in-up': 'fade-in-up 1.5s ease-out 0.5s forwards',
+        'marquee': 'marquee 20s linear infinite',
       },
     },
   },

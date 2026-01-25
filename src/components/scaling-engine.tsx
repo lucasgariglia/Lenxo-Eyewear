@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import MobileLayout from './mobile-layout';
 import HeroSection from './hero-section';
-import NaturalScrollSection from './natural-scroll-section';
+import EditorialContent from './editorial-content';
 import Navigation from './navigation';
-import BiometricSyncHUD from './biometric-sync-hud';
-
-gsap.registerPlugin(ScrollTrigger);
+import Footer from './footer';
 
 const DESKTOP_BREAKPOINT = 769;
 const CANVAS_WIDTH = 1600;
@@ -20,8 +17,8 @@ export default function ScalingEngine() {
     height: 0,
   });
 
-  const mainRef = useRef<HTMLDivElement>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,42 +27,49 @@ export default function ScalingEngine() {
 
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+
+    function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        lenis.destroy();
+    };
   }, []);
 
   useLayoutEffect(() => {
-    if (windowSize.width < DESKTOP_BREAKPOINT) {
-        ScrollTrigger.getAll().forEach(t => t.kill());
-        if(sheetRef.current) {
-            gsap.set(sheetRef.current, { clearProps: "all" });
+    if (windowSize.width < DESKTOP_BREAKPOINT) return;
+    
+    // Height Sync Logic
+    const syncHeight = () => {
+        if (contentRef.current && wrapperRef.current) {
+            const scale = windowSize.width / CANVAS_WIDTH;
+            const contentHeight = contentRef.current.offsetHeight;
+            // We set the wrapper height to the "scaled" visual height
+            wrapperRef.current.style.height = `${contentHeight * scale}px`;
         }
-        return;
+    };
+
+    syncHeight();
+    
+    // Create a ResizeObserver to handle dynamic content height changes
+    const observer = new ResizeObserver(syncHeight);
+    if (contentRef.current) {
+        observer.observe(contentRef.current);
     }
 
-    const sheet = sheetRef.current;
-    const main = mainRef.current;
-    if (!sheet || !main) return;
-
-    const ctx = gsap.context(() => {
-        gsap.to(sheet, {
-            yPercent: -100,
-            ease: "none",
-            scrollTrigger: {
-                trigger: main,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true,
-            },
-        });
-    }, main);
-
-    return () => ctx.revert();
-
+    return () => observer.disconnect();
   }, [windowSize]);
 
-  if (windowSize.width === 0) {
-    return <div className="bg-background w-full h-screen" />;
-  }
+  if (windowSize.width === 0) return null;
 
   if (windowSize.width < DESKTOP_BREAKPOINT) {
     return <MobileLayout />;
@@ -75,38 +79,36 @@ export default function ScalingEngine() {
   const stageHeight = windowSize.height / scale;
 
   return (
-    <div ref={mainRef}>
-      {/* Layer 2: Ghost Spacer */}
-      <div style={{ height: '6000px' }} />
-
-      {/* Scaled Container */}
-      <div
-        className="fixed top-0 left-0"
+    <div 
+        ref={wrapperRef}
         style={{
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-          width: `${CANVAS_WIDTH}px`,
-          height: `${stageHeight}px`,
+            width: '100%',
+            overflow: 'hidden', // Hide any potential overflow from the raw unscaled box
+            position: 'relative'
+        }}
+    >
+       <div
+        ref={contentRef}
+        style={{
+            width: `${CANVAS_WIDTH}px`,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            position: 'absolute', // Remove from flow so it doesn't push bounds wrongly
+            top: 0,
+            left: 0,
         }}
       >
-        {/* Layer 1: Hero Stage */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-            <HeroSection />
-            <BiometricSyncHUD />
-            <Navigation />
-        </div>
-
-        {/* Layer 3: The Sheet */}
-        <div
-            ref={sheetRef}
-            className="absolute left-0 w-full bg-accent z-50"
-            style={{
-                top: `${stageHeight}px`,
-                height: `${stageHeight}px`,
-            }}
-        >
-          <NaturalScrollSection />
-        </div>
+         {/* Hero Section */}
+         <div style={{ height: `${stageHeight}px`, position: 'relative' }}>
+             <Navigation />
+             <HeroSection /> 
+         </div>
+         
+         {/* Editorial Content */}
+         <div className="relative z-20 bg-[#FAFAFA]">
+             <EditorialContent />
+             <Footer />
+         </div>
       </div>
     </div>
   );

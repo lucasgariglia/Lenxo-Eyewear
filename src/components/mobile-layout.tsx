@@ -1,60 +1,82 @@
-import { Aperture, ScanLine, HeartPulse, BrainCircuit } from 'lucide-react';
+import Image from "next/image";
+import { ArrowRight, ShoppingBag, Menu, PlayCircle, Search } from 'lucide-react';
 
 export default function MobileLayout() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground p-6 pt-24">
-      {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-sm border-b border-primary/20">
-        <div className="flex items-center gap-3">
-          <Aperture className="text-primary w-8 h-8" />
-          <span className="font-headline text-2xl text-accent">
-            Absolute Vision
-          </span>
+    <div className="flex flex-col min-h-screen bg-[#FAFAFA] text-black">
+      {/* 1. Mobile Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-black/5">
+        <a className="font-display font-bold text-xl tracking-tight text-black" href="#">
+            LENXO
+        </a>
+        <div className="flex items-center gap-5">
+            <Search className="w-5 h-5 text-black" />
+            <ShoppingBag className="w-5 h-5 text-black" />
+            <Menu className="w-5 h-5 text-black" />
         </div>
-      </header>
+      </nav>
       
-      {/* Hero Content */}
-      <section className="flex-grow flex flex-col items-center justify-center text-center -mt-16">
-        <h1 className="font-headline text-6xl leading-tight text-accent">
-          Vision Augmented
-        </h1>
-        <p className="font-body text-primary text-md mt-4 tracking-widest">
-          THE LENXO ENGINE
-        </p>
-      </section>
-
-      {/* Info Section */}
-      <section className="py-12 border-t border-primary/20">
-        <h2 className="font-headline text-4xl text-primary mb-8 text-center">Natural Scroll</h2>
-        <div className="space-y-6 text-base font-body text-accent/80 text-left max-w-xl mx-auto">
-          <p>
-            On larger screens, this experience is powered by the Lenxo Absolute Scaling Engine, a GSAP-driven canvas that maintains perfect proportions.
-          </p>
-          <p>
-            This mobile view presents a streamlined, accessible version of the content, optimized for vertical scrolling and touch interaction. The core principles of clarity and elegance are preserved.
-          </p>
+      {/* 2. Mobile Hero */}
+      <section className="h-[80vh] flex flex-col items-center justify-end text-center relative overflow-hidden px-6 pb-20 pt-20">
+        <div className="absolute inset-0 z-0">
+             <Image 
+                src="/pictures/hero-glasses.jpg" 
+                alt="Hero" 
+                fill 
+                className="object-cover" 
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
+        </div>
+        
+        <div className="relative z-10 flex flex-col items-center w-full">
+            <span className="font-mono text-[10px] text-[#C5A880] uppercase tracking-[0.3em] mb-4">
+                Est. 2026
+            </span>
+            <h1 className="font-display text-5xl leading-[0.9] text-white mb-6 uppercase">
+                Vision <br/> Refined
+            </h1>
+            <button className="bg-white text-black px-8 py-4 rounded-full w-full font-medium text-sm flex items-center justify-center gap-2">
+                Shop Collection
+                <ArrowRight className="w-4 h-4" />
+            </button>
         </div>
       </section>
 
-      {/* HUD Section */}
-      <section className="py-12 border-t border-primary/20 text-primary font-code text-sm">
-        <h3 className="text-lg text-center mb-6 tracking-widest">SYSTEM STATUS</h3>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-6 max-w-sm mx-auto">
-          <div className="flex items-center gap-3">
-            <ScanLine className="w-5 h-5" />
-            <p>ONLINE</p>
-          </div>
-          <p>ID: AV-LX-M-001</p>
-          <div className="flex items-center gap-3">
-            <HeartPulse className="w-5 h-5"/>
-            <p>72 BPM</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <BrainCircuit className="w-5 h-5"/>
-            <p>SYNC: 98%</p>
-          </div>
-        </div>
+      {/* 3. Mobile Collections */}
+      <section className="py-20 px-6 bg-white">
+         <div className="mb-12">
+            <h2 className="font-display text-4xl text-black mb-4 uppercase leading-none">
+                Designed <br/> For Life
+            </h2>
+            <p className="text-gray-500 text-sm font-light leading-relaxed">
+                Lightweight frames, precise lenses. Eyewear that disappears.
+            </p>
+         </div>
+
+         <div className="space-y-4">
+             {/* Card 1 */}
+            <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-gray-100">
+                <Image src="/pictures/col-tortoise.jpg" alt="Tortoise" fill className="object-cover" />
+                <div className="absolute bottom-6 left-6">
+                    <h3 className="font-display text-2xl text-black bg-white/90 backdrop-blur px-3 py-1 inline-block">Tortoise</h3>
+                </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-gray-100">
+                <Image src="/pictures/col-yellow.jpg" alt="Luminous" fill className="object-cover" />
+                <div className="absolute bottom-6 left-6">
+                    <h3 className="font-display text-2xl text-black bg-white/90 backdrop-blur px-3 py-1 inline-block">Luminous</h3>
+                </div>
+            </div>
+         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 bg-black text-white text-center">
+        <h3 className="font-display text-2xl font-bold mb-4">LENXO</h3>
+        <p className="text-white/50 text-xs">© 2026 Lenxo Inc.</p>
+      </footer>
     </div>
   );
 }
