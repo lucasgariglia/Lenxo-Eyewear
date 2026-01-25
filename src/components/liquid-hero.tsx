@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, extend, ReactThreeFiber, useThree } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
 import * as THREE from "three";
@@ -148,7 +148,9 @@ export default function LiquidHero({ className, image }: LiquidHeroProps) {
          Let's stick to default Perspective but adjust FOV/Distance if needed.
          Actually, creating a full screen quad is easiest. 
       */}
-        <Scene imagePath={image} />
+        <Suspense fallback={null}>
+          <Scene imagePath={image} />
+        </Suspense>
       </Canvas>
     </div>
   );
