@@ -196,7 +196,7 @@ export default function EditorialContent() {
       {/* --- SPREAD 3: THE CINEMATIC STATEMENT --- */}
       <section className="relative w-full h-[1000px] mt-60 overflow-hidden group">
         <Image 
-          src="/pictures/hero-shoe.jpg" 
+          src="/pictures/hero-final-vision.jpg" 
           alt="Statement" 
           fill 
           className="object-cover parallax-layer-1 grayscale hover:grayscale-0 transition-all duration-1000 scale-110" 
