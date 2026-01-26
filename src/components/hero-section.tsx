@@ -152,7 +152,7 @@ export default function HeroSection({ stageHeight }: { stageHeight?: number | st
         </div>
 
         {/* 2. Typography Layer */}
-        <div className="relative md:absolute top-auto md:top-[35%] left-0 md:left-[9%] z-10 pointer-events-none px-6 md:px-0" style={{ left: typeof window !== 'undefined' && window.innerWidth < 768 ? '0' : goldenPadding }}>
+        <div className="relative md:absolute top-auto md:top-[35%] left-0 md:left-[144px] z-10 pointer-events-none px-6 md:px-0">
             <h1 ref={titleRef} className="font-display text-[60px] md:text-[200px] leading-[0.85] md:leading-[0.75] tracking-tighter uppercase md:kinetic-serif mix-blend-difference will-change-transform">
             <div className="overflow-hidden h-[60px] md:h-[160px]">
                 <span className="line inline-block">Vision</span>
@@ -180,12 +180,12 @@ export default function HeroSection({ stageHeight }: { stageHeight?: number | st
 
         {/* 4. HUD Layer */}
         <div ref={hudRef} className="absolute inset-0 pointer-events-none z-30">
-            <div className="hud-item absolute top-40 left-6 md:left-12 flex items-center gap-4" style={{ left: typeof window !== 'undefined' && window.innerWidth < 768 ? '24px' : goldenPadding }}>
+            <div className="hud-item absolute top-40 left-6 md:left-[144px] flex items-center gap-4">
             <span className="w-8 h-[0.5px] bg-white/40"></span>
             <span className="font-mono text-[8px] md:text-[10px] tracking-[0.3em] uppercase text-white/50">Volume No. 01</span>
             </div>
 
-            <div className="hidden md:flex hud-item absolute bottom-12 left-12 items-center gap-4" style={{ left: goldenPadding }}>
+            <div className="hidden md:flex hud-item absolute bottom-12 left-[144px] items-center gap-4">
             <span className="w-8 h-[0.5px] bg-white/40"></span>
             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">Designed in California</span>
             </div>
