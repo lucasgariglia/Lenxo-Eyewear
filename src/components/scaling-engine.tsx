@@ -128,8 +128,8 @@ export default function ScalingEngine() {
               transformOrigin: 'top left',
           }}
         >
-           <div style={{ height: typeof stageHeight === 'number' ? `${stageHeight}px` : stageHeight, position: 'relative' }}>
-               <HeroSection /> 
+           <div style={{ position: 'relative' }}>
+               <HeroSection stageHeight={stageHeight} /> 
            </div>
            
            <div className="relative z-20 bg-[#FAFAFA]">
