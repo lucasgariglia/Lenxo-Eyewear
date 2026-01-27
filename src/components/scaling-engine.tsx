@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroSection from './hero-section';
 import EditorialContent from './editorial-content';
 import Navigation from './navigation';
@@ -10,6 +11,8 @@ import Footer from './footer';
 import ManifestoPreloader from './manifesto-preloader';
 import MobileLayout from './mobile-layout';
 import { useScalingLogic } from '@/hooks/use-scaling-logic';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CANVAS_WIDTH = 1600;
 
@@ -20,23 +23,52 @@ export default function ScalingEngine() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const lightLeakRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<Lenis | null>(null);
 
   // Use the extracted logic hook
   const { isMobile, scale, stageHeight } = useScalingLogic(wrapperRef, contentRef);
 
-  useEffect(() => {
+  // 1. Initialize Lenis & GSAP Sync
+  useLayoutEffect(() => {
     if (isMobile) return;
 
     const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+    lenisRef.current = lenis;
 
-    function raf(time: number) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+    // Immediately stop if not loaded
+    if (!isLoaded) lenis.stop();
+
+    // -- SCROLLER PROXY LOCK --
+    // This is critical. It tells ScrollTrigger to ask Lenis for the scroll position
+    // instead of the native window, ensuring they are perfectly in sync.
+    ScrollTrigger.scrollerProxy(window, {
+        scrollTop(value) {
+            if (arguments.length) {
+                lenis.scrollTo(value as number, { immediate: true });
+            }
+            return lenis.scroll;
+        },
+        getBoundingClientRect() {
+            return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+        }
+    });
+
+    // Refresh GSAP after proxy setup to ensure all triggers bind correctly
+    ScrollTrigger.refresh();
+
+    // Use GSAP's ticker for Lenis animations to ensure perfect sync
+    // We remove lenis.on('scroll', ScrollTrigger.update) to avoid double-firing/jitter
+    // as ScrollTrigger automatically listens to the native window scroll event which Lenis drives.
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+        ScrollTrigger.update(); // Update ScrollTrigger on every frame of Lenis
+    });
+
+    // Disable lag smoothing to prevent jumps
+    gsap.ticker.lagSmoothing(0);
 
     const moveCursor = (e: MouseEvent) => {
         gsap.to(cursorRef.current, {
@@ -60,9 +92,23 @@ export default function ScalingEngine() {
 
     return () => {
         window.removeEventListener('mousemove', moveCursor);
+        // Clean up GSAP integration
+        gsap.ticker.remove(lenis.raf);
         lenis.destroy();
+        lenisRef.current = null;
     };
-  }, [isMobile]);
+  }, [isMobile]); // Removing isLoaded from deps to prevent re-initialization
+
+  // 2. Control Scroll based on Loading State
+  useEffect(() => {
+    if (lenisRef.current) {
+        if (isLoaded) {
+            lenisRef.current.start();
+        } else {
+            lenisRef.current.stop();
+        }
+    }
+  }, [isLoaded]);
 
   // Initial render guard
   if (scale === 0 && !isMobile) return null;

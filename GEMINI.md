@@ -14,7 +14,11 @@ The 769px Pivot: Kill the engine and collapse to a vertical flex column ONLY at 
 Motion: Use GSAP + ScrollTrigger + Lenis. Calculate all triggers as value / scaleFactor. Apply force3D: true for 4K performance.
 3. INTERACTION & MOTION
 Adaptive HUD (Golden Ratio Snap): HUD elements must calculate position based on aspect ratio. On ultra-wide displays (21:9), HUD elements should transition from center-aligned to Golden Ratio anchor points (0.618) to utilize the "Power of the Periphery.
-Never use position: fixed or sticky for scroll-animations. Always use GSAP Pinning with pinSpacing: false to ensure the Absolute Scaling Engine maintains height integrity.
+The "Manual Pin" Protocol (CRITICAL): Never use native GSAP 'pin: true' or CSS 'position: fixed/sticky' for scroll-animations inside the scaled engine. The transform scale breaks native pinning.
+  - Implementation: 
+    1. Set the Container height to the full scroll track length (e.g., 3500px).
+    2. Set the Content Wrapper to 'position: absolute; top: 0; left: 0'.
+    3. Use a GSAP tween to animate the Wrapper's 'y' from 0 to (trackLength - stageHeight) with 'scrub: 0' and 'ease: none'. This counter-animates the scroll to keep the stage visually fixed.
 4. ASSET PIPELINE:
 Storage: All media must go to /public/pictures/ or /public/videos/.
 Automation: Use node scripts/download-media.js <URL> <FILENAME> for all external assets.
