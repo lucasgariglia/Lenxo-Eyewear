@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, Plus } from 'lucide-react';
+import { useScalingLogic } from '@/hooks/use-scaling-logic';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,17 +16,34 @@ const CANVAS_WIDTH = 1600;
 
 export default function SeriesPage() {
   const horizontalSectionRef = useRef<HTMLDivElement>(null);
+  const stickyViewportRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
+  const { stageHeight } = useScalingLogic(null as any, null as any);
 
   useLayoutEffect(() => {
+    if (!stageHeight || stageHeight === 'auto') return;
+    
     const sections = gsap.utils.toArray('.series-panel');
-    const totalWidth = sections.length * CANVAS_WIDTH;
+    const scrollDistance = (sections.length - 1) * CANVAS_WIDTH;
     
     const ctx = gsap.context(() => {
-      // Horizontal Scroll Animation
+      // 1. Manual Pin: Counter-animate the viewport to stay at top
+      gsap.to(stickyViewportRef.current, {
+        y: scrollDistance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: triggerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0,
+          invalidateOnRefresh: true,
+        }
+      });
+
+      // 2. Horizontal Scroll Animation
       gsap.to(horizontalSectionRef.current, {
-        x: -(totalWidth - CANVAS_WIDTH),
+        x: -scrollDistance,
         ease: "none",
         scrollTrigger: {
           trigger: triggerRef.current,
@@ -57,7 +75,10 @@ export default function SeriesPage() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [stageHeight]);
+
+  const scrollDistance = (PRODUCTS.length - 1) * 1600;
+  const triggerHeight = typeof stageHeight === 'number' ? stageHeight + scrollDistance : 2000;
 
   return (
     <LayoutStage>
@@ -75,11 +96,19 @@ export default function SeriesPage() {
             </div>
         </section>
 
-        {/* Horizontal Container Trigger Area - Tightened to 180vh */}
-        <div ref={triggerRef} className="relative" style={{ height: '180vh' }}>
+        {/* Horizontal Container Trigger Area */}
+        <div 
+          ref={triggerRef} 
+          className="relative" 
+          style={{ height: `${triggerHeight}px` }}
+        >
             
-            {/* The Sticky "Viewport" */}
-            <div className="sticky top-0 h-[800px] w-[1600px] overflow-hidden bg-[#050505]">
+            {/* The "Manual Pin" Viewport */}
+            <div 
+              ref={stickyViewportRef}
+              className="absolute top-0 left-0 w-[1600px] overflow-hidden bg-[#050505]"
+              style={{ height: typeof stageHeight === 'number' ? `${stageHeight}px` : '100vh' }}
+            >
                 <div ref={horizontalSectionRef} className="flex h-full" style={{ width: `${PRODUCTS.length * 1600}px` }}>
                     {PRODUCTS.map((product, i) => (
                         <section 

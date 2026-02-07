@@ -1,0 +1,70 @@
+
+> nextn@0.1.0 dev
+> next dev -p 9002
+
+   ▲ Next.js 15.5.9
+   - Local:        http://localhost:9002
+   - Network:      http://10.0.3.143:9002
+
+ ✓ Starting...
+ ✓ Ready in 1726ms
+ ○ Compiling / ...
+
+warn - The class `duration-[1.5s]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;1.5s&rsqb;` to silence this warning.
+
+warn - The class `duration-[2000ms]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;2000ms&rsqb;` to silence this warning.
+
+warn - The class `duration-[2s]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;2s&rsqb;` to silence this warning.
+
+warn - The class `duration-[3000ms]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;3000ms&rsqb;` to silence this warning.
+ ✓ Compiled / in 12s (2004 modules)
+ GET / 200 in 13836ms
+ ✓ Compiled in 1701ms (900 modules)
+ GET / 200 in 68ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 875ms (1121 modules)
+ GET /favicon.ico 200 in 1086ms
+ ○ Compiling /series ...
+ ✓ Compiled /series in 773ms (2022 modules)
+ GET /series 200 in 939ms
+ GET /favicon.ico 200 in 15ms
+ GET /series 200 in 249ms
+ GET /favicon.ico 200 in 8ms
+ ○ Compiling /about ...
+ ✓ Compiled /about in 801ms (2029 modules)
+ GET /about 200 in 1062ms
+ GET / 200 in 33ms
+ GET /series 200 in 29ms
+ ✓ Compiled in 1570ms (2026 modules)
+ GET /series 200 in 319ms
+ GET /series 200 in 277ms
+ ✓ Compiled /favicon.ico in 260ms (1135 modules)
+ GET /favicon.ico 200 in 411ms
+ ✓ Compiled in 1935ms (2026 modules)
+ GET /series 200 in 256ms
+ ✓ Compiled in 1276ms (2026 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /series 200 in 435ms
+ ✓ Compiled /favicon.ico in 271ms (1135 modules)
+ GET /favicon.ico 200 in 435ms
+ GET /series 200 in 317ms
+ GET /favicon.ico 200 in 7ms
+ ✓ Compiled in 4.3s (2029 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /series 200 in 472ms
+ GET /favicon.ico 200 in 55ms
+ ✓ Compiled in 594ms (2029 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /series 200 in 376ms
+ GET /favicon.ico 200 in 12ms
+ GET /series 200 in 82ms
+ GET /favicon.ico 200 in 55ms
+ ✓ Compiled in 1787ms (2026 modules)
+ GET /series 200 in 304ms
+ GET /series 200 in 292ms
+ ✓ Compiled /favicon.ico in 223ms (1135 modules)
+ GET /favicon.ico 200 in 361ms

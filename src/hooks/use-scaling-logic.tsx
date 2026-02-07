@@ -50,7 +50,7 @@ export function useScalingLogic(
     
     // B. Desktop Engine: Absolute Scaling
     const syncHeight = () => {
-        if (contentRef.current && wrapperRef.current) {
+        if (contentRef?.current && wrapperRef?.current) {
             const scale = windowSize.width / CANVAS_WIDTH;
             const contentHeight = contentRef.current.offsetHeight;
             
@@ -71,15 +71,17 @@ export function useScalingLogic(
     syncHeight();
     
     const observer = new ResizeObserver(syncHeight);
-    if (contentRef.current) observer.observe(contentRef.current);
+    if (contentRef?.current) observer.observe(contentRef.current);
     
     return () => observer.disconnect();
   }, [windowSize.width, wrapperRef, contentRef]);
 
   const isMobile = windowSize.width > 0 && windowSize.width < DESKTOP_BREAKPOINT;
   const scale = isMobile ? 1 : windowSize.width / CANVAS_WIDTH;
-  // Round up to ensure we don't lose a pixel row, preventing sub-pixel gaps
-  const stageHeight = isMobile ? 'auto' : Math.ceil(windowSize.height / scale);
+  
+  // Provide a safe fallback for stageHeight if window is not yet available
+  const safeWindowHeight = typeof window !== 'undefined' ? window.innerHeight : 900;
+  const stageHeight = isMobile ? 'auto' : Math.ceil(safeWindowHeight / scale);
 
   return { isMobile, scale, stageHeight, windowSize };
 }
