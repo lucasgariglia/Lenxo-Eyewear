@@ -4,24 +4,31 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import dynamic from 'next/dynamic';
 import HeroSection from './hero-section';
 import EditorialContent from './editorial-content';
 import Navigation from './navigation';
 import Footer from './footer';
-import ManifestoPreloader from './manifesto-preloader';
 import MobileLayout from './mobile-layout';
+import FilmGrain from './ui/film-grain';
+import MagneticCursor from './ui/magnetic-cursor';
 import { useScalingLogic } from '@/hooks/use-scaling-logic';
+
+const WebGLCanvas = dynamic(() => import('./webgl/webgl-canvas'), { ssr: false });
+const HeroGL = dynamic(() => import('./webgl/hero-gl'), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger);
 
 const CANVAS_WIDTH = 1600;
 
 export default function ScalingEngine() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
+  const [isEngineReady, setIsEngineReady] = useState(false);
+  // Force a re-render to pass the lenis ref to WebGL
+  const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const lightLeakRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
@@ -30,85 +37,103 @@ export default function ScalingEngine() {
 
   // 1. Initialize Lenis & GSAP Sync
   useLayoutEffect(() => {
-    if (isMobile) return;
+    if (isMobile) {
+        setIsEngineReady(true);
+        return;
+    }
+
+    // NUCLEAR RESET: Kill all existing triggers to prevent conflicts
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    ScrollTrigger.clearScrollMemory();
+    window.scrollTo(0, 0);
+
+    // Prevent browser from restoring scroll position automatically
+    if (typeof history !== 'undefined') {
+        history.scrollRestoration = 'manual';
+    }
 
     const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisRef.current = lenis;
+    setLenisInstance(lenis);
 
     // Immediately stop if not loaded
     if (!isLoaded) lenis.stop();
 
-    // -- SCROLLER PROXY LOCK --
-    // This is critical. It tells ScrollTrigger to ask Lenis for the scroll position
-    // instead of the native window, ensuring they are perfectly in sync.
-    ScrollTrigger.scrollerProxy(window, {
-        scrollTop(value) {
-            if (arguments.length) {
-                lenis.scrollTo(value as number, { immediate: true });
-            }
-            return lenis.scroll;
-        },
-        getBoundingClientRect() {
-            return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-        }
-    });
+    // REMOVED: ScrollTrigger.scrollerProxy
+    // Reason: Lenis scrolls the native window by default. The scrollerProxy was creating 
+    // stale closure issues upon SPA navigation (reading from destroyed Lenis instances).
+    // The gsap.ticker sync below is sufficient for frame-perfect alignment.
 
-    // Refresh GSAP after proxy setup to ensure all triggers bind correctly
+    // Refresh GSAP after setup to ensure all triggers bind correctly
     ScrollTrigger.refresh();
 
+    // Signal that the engine is ready for children to mount
+    setIsEngineReady(true);
+
     // Use GSAP's ticker for Lenis animations to ensure perfect sync
-    // We remove lenis.on('scroll', ScrollTrigger.update) to avoid double-firing/jitter
-    // as ScrollTrigger automatically listens to the native window scroll event which Lenis drives.
-    gsap.ticker.add((time) => {
+    // We create a named function to ensure we can remove it correctly on cleanup
+    const update = (time: number, deltaTime: number, frame: number) => {
         lenis.raf(time * 1000);
-        ScrollTrigger.update(); // Update ScrollTrigger on every frame of Lenis
-    });
+        ScrollTrigger.update();
+    };
+    
+    gsap.ticker.add(update);
 
     // Disable lag smoothing to prevent jumps
     gsap.ticker.lagSmoothing(0);
 
-    const moveCursor = (e: MouseEvent) => {
-        gsap.to(cursorRef.current, {
-            x: e.clientX,
-            y: e.clientY,
-            duration: 0.6,
-            ease: "power3.out"
-        });
-    };
-    window.addEventListener('mousemove', moveCursor);
-
     lenis.on('scroll', ({ velocity }: { velocity: number }) => {
         const v = Math.abs(velocity);
-        gsap.to(lightLeakRef.current, {
-            opacity: Math.min(v * 0.05, 0.3),
-            x: velocity * 2,
-            duration: 1,
-            ease: "power2.out"
-        });
+        if (lightLeakRef.current) {
+             gsap.to(lightLeakRef.current, {
+                opacity: Math.min(v * 0.05, 0.3),
+                x: velocity * 2,
+                duration: 1,
+                ease: "power2.out",
+                overwrite: 'auto'
+            });
+        }
     });
 
     return () => {
-        window.removeEventListener('mousemove', moveCursor);
         // Clean up GSAP integration
-        gsap.ticker.remove(lenis.raf);
+        gsap.ticker.remove(update);
         lenis.destroy();
         lenisRef.current = null;
+        setLenisInstance(null);
+        if (typeof history !== 'undefined') {
+            history.scrollRestoration = 'auto';
+        }
     };
   }, [isMobile]); // Removing isLoaded from deps to prevent re-initialization
 
   // 2. Control Scroll based on Loading State
   useEffect(() => {
-    if (lenisRef.current) {
+    if (lenisRef.current && isEngineReady) {
         if (isLoaded) {
+            // CRITICAL: Clear GSAP's cached scroll positions
+            ScrollTrigger.clearScrollMemory();
+            
             lenisRef.current.start();
+            // Force browser to top
+            window.scrollTo(0, 0);
+            lenisRef.current.scrollTo(0, { immediate: true });
+            
+            // Immediate refresh to catch initial layout
+            ScrollTrigger.refresh();
+            
+            // Allow layout to settle before final refresh
+            setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 500);
         } else {
             lenisRef.current.stop();
         }
     }
-  }, [isLoaded]);
+  }, [isLoaded, isEngineReady]);
 
   // Initial render guard
   if (scale === 0 && !isMobile) return null;
@@ -119,11 +144,25 @@ export default function ScalingEngine() {
 
   return (
     <>
-      {!isLoaded && <ManifestoPreloader onComplete={() => setIsLoaded(true)} />}
-      
+      <FilmGrain />
+      {!isMobile && <MagneticCursor />}
+      {!isMobile && (
+        <WebGLCanvas>
+             <HeroGL imageUrl="/pictures/hero-final-vision.jpg" lenis={lenisInstance} />
+        </WebGLCanvas>
+      )}
+
+      {/* Cinematic Gradient Overlays (Global - Always on top of WebGL) */}
+      {!isMobile && (
+        <>
+            <div className="fixed inset-0 bg-black/30 pointer-events-none z-[1]" />
+            <div className="fixed inset-0 bg-gradient-to-r from-black/95 via-black/40 to-black/95 pointer-events-none z-[1]" />
+        </>
+      )}
+
       <div 
           ref={wrapperRef}
-          className={`digital-grain transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} cursor-none`}
+          className={`relative z-10 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} cursor-none`}
           style={{
               width: '100%',
               position: 'relative',
@@ -145,15 +184,6 @@ export default function ScalingEngine() {
             </div>
          </div>
 
-         {/* Focus Ring Cursor - Desktop Only */}
-         <div 
-            ref={cursorRef}
-            className="fixed top-0 left-0 w-12 h-12 border border-[#C5A880]/40 rounded-full pointer-events-none z-[10000] flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
-        >
-            <div className="w-1 h-1 bg-[#C5A880] rounded-full"></div>
-            <div className="absolute -top-6 left-1/2 -translate-x-1/2 font-mono text-[6px] tracking-widest text-[#C5A880] opacity-40 uppercase">Focus_Active</div>
-        </div>
-
          {/* Anamorphic Light Leak Layer - Desktop Only */}
          <div 
             ref={lightLeakRef}
@@ -174,14 +204,18 @@ export default function ScalingEngine() {
               transformOrigin: 'top left',
           }}
         >
-           <div style={{ position: 'relative' }}>
-               <HeroSection stageHeight={stageHeight} /> 
-           </div>
-           
-           <div className="relative z-20 bg-[#FAFAFA]">
-               <EditorialContent />
-               <Footer />
-           </div>
+           {isEngineReady && (
+             <>
+               <div style={{ position: 'relative' }}>
+                   <HeroSection stageHeight={stageHeight} /> 
+               </div>
+               
+               <div className="relative z-20 bg-[#FAFAFA]">
+                   <EditorialContent />
+                   <Footer />
+               </div>
+             </>
+           )}
         </div>
       </div>
     </>

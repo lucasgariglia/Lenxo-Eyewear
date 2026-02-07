@@ -1,5 +1,7 @@
 import type {Metadata} from 'next';
 import { Toaster } from "@/components/ui/toaster";
+import { ShopProvider } from '@/context/shop-context';
+import CartDrawer from '@/components/cart/cart-drawer';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -21,8 +23,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
       </head>
       <body className="font-sans bg-background text-foreground antialiased">
-        {children}
-        <Toaster />
+        <ShopProvider>
+            {children}
+            <CartDrawer />
+            <Toaster />
+        </ShopProvider>
       </body>
     </html>
   );

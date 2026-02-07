@@ -66,6 +66,11 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      transitionTimingFunction: {
+        'expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+        'expo-out': 'cubic-bezier(0.19, 1, 0.22, 1)',
+        'expo-in': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
+      },
       keyframes: {
         'accordion-down': {
           from: {

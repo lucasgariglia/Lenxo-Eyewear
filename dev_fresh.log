@@ -1,0 +1,22 @@
+
+> nextn@0.1.0 dev
+> next dev --turbopack -p 9002
+
+   ▲ Next.js 15.5.9 (Turbopack)
+   - Local:        http://localhost:9002
+   - Network:      http://10.88.0.3:9002
+
+ ✓ Starting...
+ ✓ Ready in 3.4s
+ ○ Compiling / ...
+
+warn - The class `duration-[1.5s]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;1.5s&rsqb;` to silence this warning.
+
+warn - The class `duration-[2000ms]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;2000ms&rsqb;` to silence this warning.
+
+warn - The class `duration-[3000ms]` is ambiguous and matches multiple utilities.
+warn - If this is content and not a class, replace it with `duration-&lsqb;3000ms&rsqb;` to silence this warning.
+ ✓ Compiled / in 28.7s
+ HEAD / 200 in 28912ms

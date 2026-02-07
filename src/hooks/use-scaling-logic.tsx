@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useLayoutEffect, useEffect, RefObject } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const DESKTOP_BREAKPOINT = 769;
 const CANVAS_WIDTH = 1600;
@@ -43,6 +44,7 @@ export function useScalingLogic(
             contentRef.current.style.height = 'auto';
             contentRef.current.style.position = 'static';
         }
+        ScrollTrigger.refresh();
         return;
     }
     
@@ -60,6 +62,9 @@ export function useScalingLogic(
             contentRef.current.style.transformOrigin = 'top left';
             contentRef.current.style.width = `${CANVAS_WIDTH}px`;
             contentRef.current.style.position = 'absolute';
+
+            // CRITICAL: Refresh ScrollTrigger after height change
+            ScrollTrigger.refresh();
         }
     };
 
@@ -73,7 +78,8 @@ export function useScalingLogic(
 
   const isMobile = windowSize.width > 0 && windowSize.width < DESKTOP_BREAKPOINT;
   const scale = isMobile ? 1 : windowSize.width / CANVAS_WIDTH;
-  const stageHeight = isMobile ? 'auto' : (windowSize.height / scale);
+  // Round up to ensure we don't lose a pixel row, preventing sub-pixel gaps
+  const stageHeight = isMobile ? 'auto' : Math.ceil(windowSize.height / scale);
 
   return { isMobile, scale, stageHeight, windowSize };
 }

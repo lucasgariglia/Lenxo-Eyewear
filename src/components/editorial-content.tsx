@@ -5,6 +5,9 @@ import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import KineticText from './ui/kinetic-text';
+import { EditorialEase } from '@/lib/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,31 +52,36 @@ export default function EditorialContent() {
     const ctx = gsap.context(() => {
       // 1. Smooth Parallax with subtle rotation
       gsap.utils.toArray<HTMLElement>('.parallax-layer-1').forEach((el) => {
-        gsap.to(el, {
-          yPercent: -20,
-          rotationZ: 0.01,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
+        gsap.fromTo(el, 
+          { yPercent: 10 },
+          {
+            yPercent: -10,
+            rotationZ: 0.01,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el.parentElement,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            }
           }
-        });
+        );
       });
 
       gsap.utils.toArray<HTMLElement>('.parallax-layer-2').forEach((el) => {
-        gsap.to(el, {
-          yPercent: -40,
-          scale: 1.05,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
+        gsap.fromTo(el,
+          { yPercent: 15 },
+          {
+            yPercent: -15,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el.parentElement,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            }
           }
-        });
+        );
       });
 
       // 2. Headline Reveal with skew
@@ -82,28 +90,32 @@ export default function EditorialContent() {
         skewY: 7,
         opacity: 0,
         duration: 1.5,
-        ease: "power4.out",
-        stagger: 0.2,
+        ease: EditorialEase,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: '.reveal-text',
-          start: "top 90%",
+          start: "top bottom",
         }
       });
 
-      // 3. Section Transitions: Push Effect
-      const sections = gsap.utils.toArray<HTMLElement>('section');
+      // 3. Section Transitions: Safer Fade Reveal (Replaced risky Clip Path)
+      const sections = gsap.utils.toArray<HTMLElement>('section.lens-section');
       sections.forEach((section, i) => {
-        if (i === 0) return;
-        gsap.from(section, {
-          y: 200,
-          opacity: 0,
-          duration: 1.5,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 90%",
+        gsap.fromTo(section, 
+          { opacity: 0, y: 100 },
+          { 
+            opacity: 1, 
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 95%", // Start revealing much earlier
+              end: "top 50%",
+              toggleActions: "play none none reverse",
+            }
           }
-        });
+        );
       });
 
     }, containerRef);
@@ -115,20 +127,20 @@ export default function EditorialContent() {
     <div ref={containerRef} className="relative w-[1600px] bg-[#FAFAFA] text-black overflow-hidden pb-60">
       
       {/* --- SPREAD 1: THE ASYMMETRIC OPENER --- */}
-      <section className="relative h-[1600px] w-full px-20 pt-40">
-        <div className="absolute top-20 left-20 z-40 flex flex-col gap-1">
+      <section className="relative h-[1200px] w-full px-20 pt-20">
+        <div className="absolute top-10 left-20 z-40 flex flex-col gap-1">
             <span className="font-mono text-[8px] tracking-[0.5em] uppercase text-black/20">Coordinate System</span>
             <span className="font-mono text-[10px] tracking-[0.2em] text-[#C5A880]">Lat: {coords.x}°N / Long: {coords.y}°W</span>
         </div>
 
-        <div className="absolute top-40 left-20 w-[1px] h-[800px] bg-black/5 z-0"></div>
+        <div className="absolute top-20 left-20 w-[1px] h-[600px] bg-black/5 z-0"></div>
         
         <div className="absolute top-20 right-20 w-[600px] h-[800px] overflow-hidden bg-gray-100 z-10 shadow-[0_40px_100px_rgba(0,0,0,0.1)]">
           <Image 
             src="/pictures/hero-minimal.jpg" 
             alt="Editorial Eyewear" 
             fill 
-            className="object-cover image-reveal parallax-layer-1" 
+            className="object-cover image-reveal parallax-layer-1 scale-125" 
           />
           <div className="absolute inset-0 bg-black/5 mix-blend-multiply pointer-events-none"></div>
           
@@ -136,7 +148,7 @@ export default function EditorialContent() {
           <Hotspot x="35%" y="45%" label="Refractive Surface" detail="Zero-Distortion Optical Glass with Grade 4 Coating." />
         </div>
 
-        <div className="relative z-20 mt-60">
+        <div className="relative z-20 mt-32">
           <h2 className="font-display text-[140px] leading-[0.8] tracking-tighter uppercase kinetic-serif text-black">
             <div className="overflow-hidden h-[120px]">
               <span className="reveal-text inline-block">The New</span>
@@ -150,12 +162,12 @@ export default function EditorialContent() {
           </h2>
         </div>
 
-        <div className="absolute top-[800px] left-[15%] w-[400px] h-[540px] overflow-hidden z-30 shadow-[0_50px_120px_rgba(0,0,0,0.15)] border-[16px] border-white ring-1 ring-black/5">
+        <div className="absolute top-[600px] left-[15%] w-[400px] h-[540px] overflow-hidden z-30 shadow-[0_50px_120px_rgba(0,0,0,0.15)] border-[16px] border-white ring-1 ring-black/5">
           <Image 
             src="/pictures/editorial-portrait.jpg" 
             alt="Portrait" 
             fill 
-            className="object-cover parallax-layer-2 scale-110" 
+            className="object-cover parallax-layer-2 scale-125" 
           />
         </div>
 
@@ -165,21 +177,24 @@ export default function EditorialContent() {
             <div className="flex-grow h-[0.5px] bg-black/20"></div>
           </div>
           <h3 className="font-display text-4xl mb-6 uppercase leading-tight kinetic-serif">Lightness as a <br/> Philosophy</h3>
-          <p className="font-sans text-sm text-gray-500 leading-relaxed tracking-wide uppercase tracking-[0.1em]">
+          
+          {/* Kinetic Read Implementation */}
+          <KineticText className="font-sans text-sm text-gray-500 uppercase tracking-[0.1em]">
             Our frames weigh less than a standard envelope. By removing the unnecessary, we expose the essential beauty of your features.
-          </p>
+          </KineticText>
+
           <div className="mt-10 flex items-center gap-6">
-            <button className="font-mono text-[10px] tracking-[0.3em] uppercase border-b border-black pb-1 hover:text-[#C5A880] hover:border-[#C5A880] transition-all duration-500">
+            <Link href="/about" className="font-mono text-[10px] tracking-[0.3em] uppercase border-b border-black pb-1 hover:text-[#C5A880] hover:border-[#C5A880] transition-all duration-500 cursor-pointer">
               Explore Craft
-            </button>
+            </Link>
             <span className="text-gray-300">/</span>
             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-gray-400">Section 04</span>
           </div>
         </div>
       </section>
 
-      {/* --- SPREAD 2: THE MATERIAL GRID --- */}
-      <section className="relative w-full px-20 mt-40">
+      {/* --- SPREAD 2: THE MATERIAL GRID (Lens Reveal Applied) --- */}
+      <section className="lens-section relative w-full px-20 mt-40">
         <div className="flex justify-between items-start mb-32">
           <div className="max-w-md">
             <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-black/40 mb-4 block">Series 02 / Materiality</span>
@@ -193,7 +208,7 @@ export default function EditorialContent() {
 
         <div className="grid grid-cols-12 gap-10">
           {/* Main Feature - 7 columns with Blueprint Overlay */}
-          <div className="col-span-7 relative h-[900px] overflow-hidden group cursor-pointer bg-gray-100 shadow-xl">
+          <Link href="/product/archon-801" className="col-span-7 relative h-[900px] overflow-hidden group cursor-pointer bg-gray-100 shadow-xl block">
              <Image 
                src="/pictures/col-modern.jpg" 
                alt="Modern" 
@@ -217,11 +232,11 @@ export default function EditorialContent() {
                 <span className="font-mono text-[10px] tracking-[0.3em] uppercase mb-2 block text-[#C5A880]">Item 01 / Obsidian</span>
                 <h3 className="font-display text-5xl uppercase kinetic-serif group-hover:text-black transition-colors">The Archon</h3>
              </div>
-          </div>
+          </Link>
 
           {/* Side Stack - 5 columns */}
           <div className="col-span-5 flex flex-col gap-10">
-            <div className="relative h-[430px] overflow-hidden group cursor-pointer bg-gray-100 shadow-lg">
+            <Link href="/product/archon-801" className="relative h-[430px] overflow-hidden group cursor-pointer bg-gray-100 shadow-lg block">
                <Image 
                  src="/pictures/collection-1.jpg" 
                  alt="Lifestyle" 
@@ -231,7 +246,7 @@ export default function EditorialContent() {
                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700 bg-white/20 backdrop-blur-md">
                   <span className="font-mono text-[10px] tracking-[0.5em] uppercase text-black bg-white/90 px-8 py-4 rounded-full shadow-2xl">View Piece</span>
                </div>
-            </div>
+            </Link>
             
             <div className="relative h-[430px] bg-[#0E2A47] p-12 flex flex-col justify-between text-white shadow-lg overflow-hidden group">
                <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-[2000ms]"></div>
@@ -239,11 +254,9 @@ export default function EditorialContent() {
                <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40">Technical Specs</span>
                <div>
                   <h4 className="font-display text-3xl mb-4 uppercase kinetic-serif">Bio-Titanium <br/> Construction</h4>
-                  <p className="font-sans text-xs text-white/60 leading-relaxed uppercase tracking-[0.2em]">
-                    Unparalleled strength-to-weight ratio. <br/>
-                    Hypoallergenic coating. <br/>
-                    Laser-etched serial numbers.
-                  </p>
+                  <KineticText className="font-sans text-xs text-white/60 uppercase tracking-[0.2em]">
+                    Unparalleled strength-to-weight ratio. Hypoallergenic coating. Laser-etched serial numbers.
+                  </KineticText>
                </div>
                <div className="w-12 h-[1px] bg-[#C5A880]"></div>
             </div>
@@ -252,12 +265,12 @@ export default function EditorialContent() {
       </section>
 
       {/* --- SPREAD 3: THE CINEMATIC STATEMENT --- */}
-      <section className="relative w-full h-[1000px] mt-60 overflow-hidden group">
+      <section className="lens-section relative w-full h-[1000px] mt-60 overflow-hidden group">
         <Image 
           src="/pictures/hero-final-vision.jpg" 
           alt="Statement" 
           fill 
-          className="object-cover parallax-layer-1 grayscale group-hover:grayscale-0 transition-all duration-[2000ms] scale-110" 
+          className="object-cover parallax-layer-1 grayscale group-hover:grayscale-0 transition-all duration-[2000ms] scale-125" 
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60"></div>
         
@@ -271,15 +284,15 @@ export default function EditorialContent() {
           </h2>
           
           <div className="mt-20 flex gap-20">
-            <div className="flex flex-col items-center gap-4 group/item">
+            <Link href="/collection" className="flex flex-col items-center gap-4 group/item cursor-pointer">
               <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-white/40 group-hover/item:text-[#C5A880] transition-colors">Collection</span>
               <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-white">Full Series</span>
-            </div>
+            </Link>
             <div className="w-[1px] h-16 bg-white/20"></div>
-            <div className="flex flex-col items-center gap-4 group/item">
+            <Link href="/contact" className="flex flex-col items-center gap-4 group/item cursor-pointer">
               <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-white/40 group-hover/item:text-[#C5A880] transition-colors">Retailers</span>
               <span className="font-sans text-xs font-bold uppercase tracking-[0.3em] text-white">Find a Boutique</span>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

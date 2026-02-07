@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useLayoutEffect, useRef } from 'react';
-import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { LucideGlasses, LucideZap, LucideBrain, LucideMap, LucideCpu, LucideScan, LucideWaves, LucideAperture } from 'lucide-react';
+import { LucideWaves, LucideAperture, LucideScan } from 'lucide-react';
+import { EditorialEase } from '@/lib/constants';
+import Link from 'next/link';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +17,6 @@ interface HeroSectionProps {
 export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyWrapperRef = useRef<HTMLDivElement>(null);
-  const mainImageRef = useRef<HTMLDivElement>(null);
   
   // Slide Refs
   const slideIntroRef = useRef<HTMLDivElement>(null);
@@ -36,8 +36,6 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
     if (!stageHeight || typeof stageHeight !== 'number') return;
     
     // TRACK LENGTH: The virtual height of the scroll sequence
-    // In the scaled system, this is pixels inside the scale.
-    // 3500px is enough for our sequence.
     const TRACK_LENGTH = 3500;
 
     const ctx = gsap.context(() => {
@@ -48,25 +46,18 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
       
       // 2. Initial Load Animation (The "Unveil")
       const introTl = gsap.timeline({ 
-        defaults: { ease: "power4.out" },
+        defaults: { ease: EditorialEase, duration: 2.2 },
         onComplete: () => ScrollTrigger.refresh()
       });
 
-      introTl.fromTo(mainImageRef.current, 
-        { scale: 1.2, filter: "blur(20px)" },
-        { scale: 1, filter: "blur(0px)", duration: 2.2 }
-      )
-      .fromTo(slideIntroRef.current?.querySelectorAll('.line') || [],
+      introTl.fromTo(slideIntroRef.current?.querySelectorAll('.line') || [],
         { y: 150, opacity: 0, skewY: 7 },
-        { y: 0, opacity: 1, skewY: 0, duration: 1.5, stagger: 0.15 },
-        "<+0.3"
+        { y: 0, opacity: 1, skewY: 0, stagger: 0.1 }
       );
 
       // 3. THE MANUAL PIN ENGINE
       // Instead of pin:true, we counter-animate the y position.
       // As the container scrolls UP (naturally), we move the wrapper DOWN.
-      // This works perfectly inside the scale() context because both move in the same coordinate system.
-      
       const pinTl = gsap.timeline({
           scrollTrigger: {
               trigger: containerRef.current,
@@ -77,20 +68,17 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
           }
       });
       
-      // Calculate how far to move down.
-      // We want the wrapper to stay at the top of the viewport.
-      // Viewport top relative to container starts at 0 and goes to TRACK_LENGTH.
-      // So we move y from 0 to (TRACK_LENGTH - stageHeight).
       const travelDistance = TRACK_LENGTH - stageHeight;
       
       pinTl.to(stickyWrapperRef.current, {
           y: travelDistance,
-          ease: "none"
+          ease: "none",
+          force3D: true,
+          immediateRender: false // CRITICAL: Prevent pre-calculation before layout is stable
       });
 
 
       // 4. THE STORY SEQUENCE (Parallax & Fades)
-      // This timeline runs in parallel, driven by the same scroll progress.
       const storyTl = gsap.timeline({
         scrollTrigger: {
             trigger: containerRef.current,
@@ -102,44 +90,40 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
 
       // --- SCROLL SEQUENCE ---
       
-      // A. Intro Exit & Slide 1 Entry (0% - 20%)
-      storyTl.to(slideIntroRef.current, { opacity: 0, y: -100, filter: "blur(10px)", duration: 0.1 }, 0.05)
-             .to(mainImageRef.current, { scale: 1.05, duration: 1, ease: "none" }, 0); // Continuous slow zoom over whole seq
+      // A. Intro Exit (0% - 20%)
+      storyTl.to(slideIntroRef.current, { opacity: 0, y: -100, filter: "blur(10px)", duration: 0.2, ease: "power2.in" }, 0.05);
 
       // SLIDE 1: VISION (Augmented Reality) (20% - 40%)
       storyTl.fromTo(slide1Ref.current, 
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.1 }, 
+        { opacity: 0, y: 100 },
+        { opacity: 1, y: 0, duration: 0.25, ease: EditorialEase }, 
         0.15
       );
-      storyTl.from(slide1Ref.current?.querySelector('.slide-card') || [], { x: -50, opacity: 0, duration: 0.1 }, "<");
       
       // Slide 1 Exit (40% - 45%)
-      storyTl.to(slide1Ref.current, { opacity: 0, y: -50, filter: "blur(5px)", duration: 0.1 }, 0.35);
+      storyTl.to(slide1Ref.current, { opacity: 0, y: -100, filter: "blur(20px)", duration: 0.2, ease: "power2.in" }, 0.4);
 
 
       // SLIDE 2: NEURAL (Thought Control) (50% - 70%)
       storyTl.fromTo(slide2Ref.current,
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 0.1 },
-        0.45
+        { opacity: 0, y: 100 },
+        { opacity: 1, y: 0, duration: 0.25, ease: EditorialEase },
+        0.5
       );
-      storyTl.from(slide2Ref.current?.querySelector('.slide-card') || [], { x: 50, opacity: 0, duration: 0.1 }, "<");
 
       // Slide 2 Exit (70% - 75%)
-      storyTl.to(slide2Ref.current, { opacity: 0, y: -50, filter: "blur(5px)", duration: 0.1 }, 0.65);
+      storyTl.to(slide2Ref.current, { opacity: 0, y: -100, filter: "blur(20px)", duration: 0.2, ease: "power2.in" }, 0.75);
 
 
       // SLIDE 3: CONTEXT (Real World) (80% - 100%)
       storyTl.fromTo(slide3Ref.current,
-        { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.1 },
-        0.75
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.25, ease: EditorialEase },
+        0.8
       );
       
-      // Slide 3 Exit / Transition to Next Section (95% - 100%)
-      storyTl.to(slide3Ref.current, { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 0.1 }, 0.9);
-      storyTl.to(mainImageRef.current, { opacity: 0.4, filter: "grayscale(100%)", duration: 0.1 }, 0.9);
+      // Slide 3 Exit / Transition (95% - 100%)
+      storyTl.to(slide3Ref.current, { opacity: 0, scale: 1.1, filter: "blur(20px)", duration: 0.1 }, 0.95);
 
 
       // 4. Continuous Scanner Pulse
@@ -151,17 +135,13 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
         yoyo: true
       });
 
+      // FINAL REFRESH: Ensure all triggers are calibrated
       ScrollTrigger.refresh();
 
     }, containerRef);
 
     return () => ctx.revert();
   }, [stageHeight]);
-
-  // Absolute Scaling Engine Geometry
-  // Manual Pinning Requirement:
-  // Container must have the FULL HEIGHT of the track (3500px).
-  // StickyWrapper must have the STAGE HEIGHT (viewport).
   
   const TRACK_LENGTH = 3500;
 
@@ -170,38 +150,29 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
     : { width: '1600px' };
     
   const wrapperStyle = typeof stageHeight === 'number'
-    ? { height: `${stageHeight}px`, width: '1600px', position: 'absolute' as const, top: 0, left: 0 }
+    ? { 
+        height: `${stageHeight + 2}px`, 
+        width: '1600px', 
+        position: 'absolute' as const, 
+        top: -1, 
+        left: 0,
+      }
     : { width: '1600px' };
 
   return (
     <section 
       ref={containerRef} 
-      className="relative bg-black text-white overflow-visible"
+      className="relative bg-transparent text-white overflow-visible"
       style={containerStyle}
     >
-      
-      {/* Sticky Stage Wrapper - Now Absolute & Manually Pinned */}
+      {/* Sticky Stage Wrapper - Manually Pinned */}
       <div 
         ref={stickyWrapperRef} 
         className="relative overflow-hidden md:block will-change-transform"
         style={wrapperStyle}
       >
-        {/* 1. Cinematic Background Layer */}
-        <div 
-            ref={mainImageRef}
-            className="absolute top-0 right-0 w-full h-full z-0 origin-center will-change-transform"
-        >
-            <Image 
-            src="/pictures/hero-glasses.jpg" 
-            alt="Absolute Vision" 
-            fill 
-            className="object-cover opacity-80"
-            priority
-            />
-            {/* Cinematic Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/20 to-black/60" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
-        </div>
+        {/* Note: Background Image removed, handled by WebGL Layer */}
+        {/* Cinematic Gradient Overlays removed - moved to ScalingEngine for persistence */}
 
         {/* --- STORY LAYERS --- */}
 
@@ -333,8 +304,8 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
         {/* 4. Golden Ratio HUD Layer (Persistent) */}
         <div ref={hudRef} className="absolute inset-0 pointer-events-none z-30">
             {/* Volume Label */}
-            <div className="hud-item absolute top-[160px] left-[144px] flex items-center gap-6">
-                <div className="w-12 h-[0.5px] bg-white/30"></div>
+            <div className="hud-item absolute top-[160px] left-[144px] flex items-center gap-6 will-change-transform">
+                <div className="w-12 h-[2px] bg-white/20"></div>
                 <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40">Volume No. 01</span>
             </div>
 
@@ -349,10 +320,10 @@ export default function HeroSection({ stageHeight, scale = 1 }: HeroSectionProps
 
         {/* 5. Immersive Interactions (Persistent CTA) */}
         <div className="absolute bottom-[80px] right-[144px] z-40">
-            <button className="group relative flex items-center gap-8 px-14 py-6 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-2xl transition-all hover:border-[#C5A880] pointer-events-auto">
+            <Link href="/collection" className="group relative flex items-center gap-8 px-14 py-6 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-2xl transition-all hover:border-[#C5A880] pointer-events-auto">
                 <span className="font-sans text-[12px] font-bold tracking-[0.5em] uppercase transition-colors group-hover:text-[#C5A880]">Explore Archive</span>
                 <div className="w-2.5 h-2.5 rounded-full bg-[#C5A880] group-hover:scale-[1.8] transition-transform shadow-[0_0_15px_#C5A880]"></div>
-            </button>
+            </Link>
         </div>
       </div>
 

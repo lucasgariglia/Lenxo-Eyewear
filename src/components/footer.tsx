@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Instagram, Twitter, ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -38,8 +39,8 @@ export default function Footer() {
                     </p>
                     
                     <div className="mt-12 lg:mt-20 flex gap-6">
-                        <a href="#" className="font-mono text-[9px] tracking-[0.3em] uppercase hover:text-[#C5A880] transition-colors">Instagram</a>
-                        <a href="#" className="font-mono text-[9px] tracking-[0.3em] uppercase hover:text-[#C5A880] transition-colors">Twitter / X</a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-[0.3em] uppercase hover:text-[#C5A880] transition-colors">Instagram</a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-[0.3em] uppercase hover:text-[#C5A880] transition-colors">Twitter / X</a>
                     </div>
                 </div>
 
@@ -47,12 +48,12 @@ export default function Footer() {
                 <div className="lg:col-span-4">
                     <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/20 mb-6 lg:mb-10 block">Archive Index</span>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-4 font-mono text-[9px] tracking-[0.2em] uppercase text-white/60">
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 801</span><span className="text-[#C5A880]">Archon</span></div>
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 802</span><span className="text-[#C5A880]">Stitch</span></div>
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 803</span><span className="text-[#C5A880]">Minimal</span></div>
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 804</span><span className="text-[#C5A880]">Refined</span></div>
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 805</span><span className="text-[#C5A880]">Vision</span></div>
-                        <div className="flex justify-between border-b border-white/5 pb-2"><span>Model 806</span><span className="text-[#C5A880]">Statement</span></div>
+                        <Link href="/product/archon-801" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 801</span><span className="text-[#C5A880]">Archon</span></Link>
+                        <Link href="/product/stitch-802" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 802</span><span className="text-[#C5A880]">Stitch</span></Link>
+                        <Link href="/collection" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 803</span><span className="text-[#C5A880]">Minimal</span></Link>
+                        <Link href="/product/refined-804" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 804</span><span className="text-[#C5A880]">Refined</span></Link>
+                        <Link href="/product/vision-803" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 805</span><span className="text-[#C5A880]">Vision</span></Link>
+                        <Link href="/collection" className="flex justify-between border-b border-white/5 pb-2 hover:text-[#C5A880] transition-colors"><span>Model 806</span><span className="text-[#C5A880]">Statement</span></Link>
                     </div>
                 </div>
 
@@ -61,10 +62,10 @@ export default function Footer() {
                     <div className="text-left lg:text-right w-full">
                         <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/20 mb-6 lg:mb-10 block">Navigation</span>
                         <ul className="space-y-4 font-display text-xl lg:text-2xl uppercase tracking-tighter">
-                            <li><a href="#" className="hover:italic hover:text-[#C5A880] transition-all underline decoration-white/10 underline-offset-8">The Series</a></li>
-                            <li><a href="#" className="hover:italic hover:text-[#C5A880] transition-all">Archive</a></li>
-                            <li><a href="#" className="hover:italic hover:text-[#C5A880] transition-all">Heritage</a></li>
-                            <li><a href="#" className="hover:italic hover:text-[#C5A880] transition-all">Contact</a></li>
+                            <li><Link href="/collection" className="hover:italic hover:text-[#C5A880] transition-all underline decoration-white/10 underline-offset-8">The Series</Link></li>
+                            <li><Link href="/collection" className="hover:italic hover:text-[#C5A880] transition-all">Archive</Link></li>
+                            <li><Link href="/about" className="hover:italic hover:text-[#C5A880] transition-all">Heritage</Link></li>
+                            <li><Link href="/contact" className="hover:italic hover:text-[#C5A880] transition-all">Contact</Link></li>
                         </ul>
                     </div>
 
@@ -81,19 +82,19 @@ export default function Footer() {
             </div>
 
             {/* --- TECHNICAL HUD FOOTER --- */}
-            <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 lg:gap-0 font-mono text-[8px] tracking-[0.4em] uppercase text-white/10">
+            <div className="pt-10 border-t border-white/10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 lg:gap-0 font-mono text-[8px] lg:text-[9px] tracking-[0.4em] uppercase text-white/30">
                 <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
-                    <span>LENXO COLLECTIVE © 2026</span>
+                    <span className="hover:text-white transition-colors">LENXO COLLECTIVE © 2026</span>
                     <span>42.3601° N, 71.0589° W</span>
                     <span>Technical Materiality Protocol v1.0.4</span>
                 </div>
                 
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-3">
-                        <div className="w-1 h-1 rounded-full bg-[#C5A880] animate-pulse"></div>
-                        <span>Engine Status: Nominal</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#C5A880] animate-pulse"></div>
+                        <span className="text-[#C5A880]">Engine Status: Nominal</span>
                     </div>
-                    <span className="text-white/30 hidden lg:inline">1600px Stage Absolute</span>
+                    <span className="text-white/50 hidden lg:inline">1600px Stage Absolute</span>
                 </div>
             </div>
         </div>
