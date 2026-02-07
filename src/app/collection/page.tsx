@@ -17,6 +17,8 @@ export default function CollectionPage() {
   const [activeCategory, setActiveCategory] = useState("All Models");
   const [filteredProducts, setFilteredProducts] = useState(PRODUCTS);
   const gridRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLSectionElement>(null);
 
   // Filtering Logic
   useEffect(() => {
@@ -30,10 +32,8 @@ export default function CollectionPage() {
     }
     setFilteredProducts(filtered);
     
-    // Refresh ScrollTrigger after DOM update
     setTimeout(() => {
         ScrollTrigger.refresh();
-        // Re-run enter animation for new items
         if (gridRef.current) {
              gsap.fromTo(gridRef.current.children, 
                 { y: 50, opacity: 0 },
@@ -43,31 +43,47 @@ export default function CollectionPage() {
     }, 100);
   }, [activeCategory]);
   
+  // Parallax & Transition Logic
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Stagger Reveal for Grid Items (Initial Load)
-      gsap.from(".product-card", {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power4.out",
+      // 1. Hero Parallax Fade
+      gsap.to(heroRef.current, {
+        yPercent: -20,
+        opacity: 0.5,
+        ease: "none",
         scrollTrigger: {
-          trigger: ".product-grid",
-          start: "top 80%",
+          trigger: galleryRef.current,
+          start: "top bottom",
+          end: "top top",
+          scrub: true
         }
       });
+
+      // 2. Gallery "Passage" Reveal (Curtain effect handled by CSS stacking, refined by motion)
+      gsap.from(galleryRef.current, {
+        y: 100,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: galleryRef.current,
+            start: "top bottom",
+            end: "top center",
+            scrub: 1
+        }
+      });
+
     });
     return () => ctx.revert();
   }, []);
 
   return (
     <LayoutStage>
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col relative">
         
-        {/* SECTION 1: DARK HERO (Obsidian) */}
-        <section className="w-full px-6 lg:px-20 pb-20 lg:pb-32 text-white relative z-10">
-            {/* Header */}
+        {/* SECTION 1: DARK HERO (Fixed/Sticky underneath) */}
+        <section 
+            ref={heroRef}
+            className="w-full h-[80vh] px-6 lg:px-20 flex flex-col justify-end pb-32 text-white sticky top-[140px] z-0"
+        >
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10 lg:gap-0">
                 <div>
                     <span className="font-mono text-[9px] lg:text-[10px] tracking-[0.4em] uppercase text-[#C5A880] mb-4 lg:mb-6 block">The Series / 2026</span>
@@ -82,78 +98,99 @@ export default function CollectionPage() {
             </div>
         </section>
 
-        {/* SECTION 2: LIGHT GALLERY (Alabaster) */}
-        <section className="w-full bg-[#FAFAFA] text-black px-6 lg:px-20 pt-16 lg:pt-24 pb-20 lg:pb-40 relative z-20">
-            {/* Seamless Transition Cover - Optional visual bridge */}
-            <div className="absolute top-0 left-0 w-full h-px bg-white/10"></div>
-
-            {/* Filters (Active) */}
-            <div className="flex gap-8 lg:gap-12 border-b border-black/10 pb-6 mb-12 lg:mb-20 font-mono text-[9px] lg:text-[10px] tracking-[0.3em] uppercase text-black/40 overflow-x-auto no-scrollbar whitespace-nowrap">
-                {CATEGORIES.map((cat) => (
-                    <button 
-                        key={cat}
-                        onClick={() => setActiveCategory(cat)}
-                        className={`transition-all duration-300 ${
-                            activeCategory === cat 
-                            ? "text-black border-b border-[#C5A880] pb-6 -mb-6 font-bold" 
-                            : "hover:text-black cursor-pointer"
-                        }`}
-                    >
-                        {cat}
-                    </button>
-                ))}
+        {/* SECTION 2: LIGHT GALLERY (Scrolls over) */}
+        <section 
+            ref={galleryRef}
+            className="w-full bg-[#FAFAFA] text-black px-6 lg:px-20 pt-24 pb-40 relative z-20 rounded-t-[40px] shadow-[0_-50px_100px_rgba(0,0,0,0.5)] min-h-screen"
+        >
+            {/* Filters (Sticky within section) */}
+            <div className="sticky top-[100px] z-30 bg-[#FAFAFA]/90 backdrop-blur-md py-6 mb-20 border-b border-black/10">
+                <div className="flex gap-8 lg:gap-12 font-mono text-[9px] lg:text-[10px] tracking-[0.3em] uppercase text-black/40 overflow-x-auto no-scrollbar whitespace-nowrap">
+                    {CATEGORIES.map((cat) => (
+                        <button 
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`transition-all duration-300 ${
+                                activeCategory === cat 
+                                ? "text-black text-[#C5A880] font-bold" 
+                                : "hover:text-black cursor-pointer"
+                            }`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Product Grid */}
-            <div ref={gridRef} className="product-grid grid grid-cols-1 lg:grid-cols-2 gap-x-0 lg:gap-x-20 gap-y-20 lg:gap-y-32">
-                {filteredProducts.map((product) => (
-                    <Link key={product.id} href={`/product/${product.slug}`} className="product-card group block relative">
-                        {/* Image Container - Light Mode Adaptation */}
-                        <div className="relative aspect-[4/3] bg-[#F0F0F0] overflow-hidden mb-6 lg:mb-8 border border-black/5 group-hover:border-[#C5A880]/50 transition-colors duration-500">
-                            <Image 
-                                src={product.images.hero} 
-                                alt={product.name} 
-                                fill 
-                                className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105 mix-blend-multiply opacity-90 group-hover:opacity-100"
-                            />
-                            
-                            {/* Blueprint Overlay - Dark Lines for Light Background */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none flex items-center justify-center p-12">
-                                 <div className="w-full h-full border border-[#C5A880]/60 relative flex items-center justify-center">
-                                     <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#C5A880]"></div>
-                                     <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#C5A880]"></div>
-                                     <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#C5A880]"></div>
-                                     <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#C5A880]"></div>
-                                     
-                                     <span className="font-mono text-[8px] tracking-[0.3em] uppercase text-[#C5A880] bg-white/90 backdrop-blur px-3 py-1">
-                                        Analyze Object
-                                     </span>
-                                 </div>
-                            </div>
-                        </div>
+            {/* Product Grid - Editorial Breaking */}
+            <div ref={gridRef} className="product-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-x-10 gap-y-32">
+                {filteredProducts.map((product, i) => {
+                    // Editorial Pattern: 
+                    // Index 0: Hero Full Width (Col 1-12)
+                    // Index 1: Left Focus (Col 1-5)
+                    // Index 2: Right Focus (Col 7-12) with top offset
+                    // Index 3: Center (Col 4-9)
+                    
+                    const isHero = i % 4 === 0;
+                    let colSpan = "md:col-span-1 lg:col-span-6"; // Default: 1/2 on tablet, 1/2 on desktop
+                    let offsetClass = "";
+                    
+                    if (isHero) {
+                        colSpan = "md:col-span-2 lg:col-span-12"; 
+                    } else if (i % 4 === 1) {
+                        colSpan = "md:col-span-1 lg:col-span-5";
+                    } else if (i % 4 === 2) {
+                        colSpan = "md:col-span-1 lg:col-span-5 lg:col-start-8"; 
+                        offsetClass = "lg:mt-32"; 
+                    } else if (i % 4 === 3) {
+                        colSpan = "md:col-span-2 lg:col-span-6 lg:col-start-4";
+                    }
 
-                        {/* Meta Data - Dark Text */}
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <span className="font-mono text-[9px] tracking-[0.3em] uppercase text-[#C5A880] mb-2 block">{product.subtitle}</span>
-                                <h3 className="font-display text-3xl lg:text-4xl uppercase mb-1 group-hover:italic transition-all">{product.name}</h3>
-                                <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest">{product.specs.material}</span>
-                            </div>
-                            
-                            <div className="text-right">
-                                 <span className="font-display text-xl lg:text-2xl block mb-2">${product.price}</span>
-                                 <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0 hidden lg:flex">
-                                     <span className="font-mono text-[8px] uppercase tracking-widest">View Spec</span>
-                                     <ArrowUpRight size={12} className="text-[#C5A880]" />
-                                 </div>
-                            </div>
+                    return (
+                        <div key={product.id} className={`${colSpan} ${offsetClass}`}>
+                            <Link href={`/product/${product.slug}`} className="product-card group block relative w-full">
+                                {/* Image Container */}
+                                <div className={`relative ${isHero ? 'aspect-[16/10]' : 'aspect-[4/3]'} bg-[#F0F0F0] overflow-hidden mb-6 border border-black/5 group-hover:border-[#C5A880]/50 transition-colors duration-500`}>
+                                    <Image 
+                                        src={product.images.hero} 
+                                        alt={product.name} 
+                                        fill 
+                                        className={`object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105 mix-blend-multiply opacity-90 group-hover:opacity-100 ${
+                                            product.slug === 'archon-801' ? 'object-[center_75%]' : 'object-center'
+                                        }`}
+                                    />
+                                    
+                                    {/* Interactive Cursor Zone (Conceptual) */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
+                                         <div className="w-20 h-20 rounded-full border border-[#C5A880] flex items-center justify-center bg-white/10 backdrop-blur-sm">
+                                             <span className="font-mono text-[8px] uppercase tracking-widest text-black">View</span>
+                                         </div>
+                                    </div>
+                                </div>
+
+                                {/* Meta Data */}
+                                <div className="flex justify-between items-start border-t border-black/10 pt-4">
+                                    <div className="max-w-[70%]">
+                                        <h3 className="font-display text-3xl lg:text-5xl uppercase mb-2 group-hover:text-[#C5A880] transition-colors">{product.name}</h3>
+                                        <div className="flex gap-4">
+                                            <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest">{product.specs.material}</span>
+                                            <span className="font-mono text-[9px] text-black/40 uppercase tracking-widest">— {product.subtitle}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="text-right">
+                                         <span className="font-display text-xl lg:text-2xl block mb-2">${product.price}</span>
+                                         <ArrowUpRight size={18} className="text-black/20 group-hover:text-[#C5A880] transition-colors ml-auto" />
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
-                    </Link>
-                ))}
+                    );
+                })}
             </div>
             
             {filteredProducts.length === 0 && (
-                <div className="w-full py-20 text-center">
+                <div className="w-full py-40 text-center">
                     <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-black/40">No artifacts found matching criteria.</span>
                 </div>
             )}

@@ -213,7 +213,7 @@ export default function EditorialContent() {
                src="/pictures/col-modern.jpg" 
                alt="Modern" 
                fill 
-               className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-110 group-hover:opacity-40" 
+               className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-110 group-hover:opacity-40 object-[center_75%]" 
              />
              {/* Technical Blueprint Overlay */}
              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none flex items-center justify-center p-20">

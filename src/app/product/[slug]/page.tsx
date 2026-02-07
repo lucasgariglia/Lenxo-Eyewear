@@ -45,7 +45,12 @@ export default function ProductPage() {
              <div className="h-[1200px] overflow-y-auto no-scrollbar relative">
                  {allImages.map((src, i) => (
                      <div key={i} className="relative w-full h-[1000px] border-b border-white/10 group">
-                         <Image src={src} alt={product.name} fill className="object-cover" />
+                         <Image 
+                            src={src} 
+                            alt={product.name} 
+                            fill 
+                            className="object-cover" 
+                         />
                          <div className="absolute bottom-10 left-10 font-mono text-[10px] tracking-[0.2em] bg-black/50 backdrop-blur px-3 py-1 rounded-full text-white/60">
                             VIEW {String(i + 1).padStart(2, '0')}
                          </div>

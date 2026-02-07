@@ -10,6 +10,8 @@ import Footer from '@/components/footer';
 import FilmGrain from '@/components/ui/film-grain';
 import MagneticCursor from '@/components/ui/magnetic-cursor';
 
+import Breadcrumbs from '@/components/ui/breadcrumbs';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const CANVAS_WIDTH = 1600;
@@ -31,21 +33,11 @@ export default function LayoutStage({ children }: { children: React.ReactNode })
     });
     lenisRef.current = lenis;
 
-    ScrollTrigger.scrollerProxy(window, {
-        scrollTop(value) {
-            if (arguments.length) {
-                lenis.scrollTo(value as number, { immediate: true });
-            }
-            return lenis.scroll;
-        },
-        getBoundingClientRect() {
-            return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-        }
-    });
-
-    ScrollTrigger.refresh();
-
-    // Ensure we start at the top on mount
+    // SCROLL PROXY REMOVED: Relying on native window scroll driven by Lenis for better compatibility
+    // with sticky elements and fixed positioning.
+    
+    // Force top
+    window.scrollTo(0, 0);
     lenis.scrollTo(0, { immediate: true });
 
     const update = (time: number) => {
@@ -71,27 +63,46 @@ export default function LayoutStage({ children }: { children: React.ReactNode })
       
       <div 
           ref={wrapperRef}
-          className={`relative w-full opacity-100 ${!isMobile ? 'cursor-none' : ''}`} // Only hide cursor if not mobile
+          className={`relative w-full opacity-100 ${!isMobile ? 'cursor-none' : ''}`}
           style={{
               width: '100%',
               position: 'relative',
               isolation: 'auto',
           }}
       >
-         {/* Navigation - Always Pinned/Scaled */}
+         {/* Navigation & Breadcrumbs - Always Pinned/Scaled */}
          <div 
             className="fixed top-0 left-0 z-[10010] w-full mix-blend-difference"
             style={{ 
                 width: isMobile ? '100%' : `${CANVAS_WIDTH}px`, 
                 transform: isMobile ? 'none' : `scale(${scale})`, 
                 transformOrigin: 'top left',
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                isolation: 'isolate' // Prevent ghosting by isolating blend context
             }}
          >
             <div className="pointer-events-auto">
                 <Navigation />
             </div>
          </div>
+
+         {/* Breadcrumbs - Bottom Pinned/Scaled */}
+         {!isMobile && (
+            <div 
+                className="fixed bottom-0 left-0 z-[10015] w-full mix-blend-difference"
+                style={{ 
+                    width: `${CANVAS_WIDTH}px`, 
+                    transform: `scale(${scale})`, 
+                    transformOrigin: 'bottom left',
+                    pointerEvents: 'none',
+                    isolation: 'isolate'
+                }}
+            >
+                <div className="pointer-events-auto">
+                    <Breadcrumbs />
+                </div>
+            </div>
+         )}
 
          {/* Content Stage */}
          <div

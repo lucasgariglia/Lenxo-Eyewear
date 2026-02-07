@@ -18,6 +18,7 @@ export default function Navigation() {
   const menuOverlayRef = useRef<HTMLDivElement>(null);
   
   const [isDocked, setIsDocked] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const { playHover, playClick } = useSoundFX();
   const [soundEnabled, setSoundEnabled] = useState(true);
   const isMobile = useIsMobile();
@@ -27,6 +28,18 @@ export default function Navigation() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const { openCart, cartCount } = useShop();
+
+  // --- SCROLL LISTENER (Mobile Only) ---
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleScroll = () => {
+        setHasScrolled(window.scrollY > 50);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
 
   // --- GSAP CONTEXT FOR SCROLL ---
   useLayoutEffect(() => {
@@ -123,10 +136,12 @@ export default function Navigation() {
       >
         {/* --- MOBILE HEADER BAR (< 769px) --- */}
         {isMobile && (
-            <div className={`flex justify-between items-center w-full h-full px-6 pointer-events-auto relative z-[10030] transition-colors duration-500 ${isMenuOpen ? 'text-white' : 'text-white mix-blend-difference'}`}>
+            <div 
+                className="flex justify-between items-center w-full h-full px-6 pointer-events-auto relative z-[10030] text-white"
+            >
                 <Link 
                     href="/" 
-                    className="font-display text-2xl font-bold tracking-tighter uppercase relative z-50"
+                    className="font-display text-2xl font-bold tracking-tighter uppercase relative z-50 hover:opacity-70 transition-opacity"
                     onClick={() => {
                       handleInteraction('click');
                       setIsMenuOpen(false);
@@ -142,12 +157,12 @@ export default function Navigation() {
                         setIsSearchOpen(!isSearchOpen);
                         if (isMenuOpen) setIsMenuOpen(false);
                       }}
-                      className="cursor-pointer"
+                      className="cursor-pointer hover:opacity-70 transition-opacity"
                     >
                         <Search className={`w-5 h-5 transition-transform ${isSearchOpen ? 'scale-110 text-[#C5A880]' : ''}`} />
                     </div>
                     <div 
-                        className="relative cursor-pointer"
+                        className="relative cursor-pointer hover:opacity-70 transition-opacity"
                         onClick={() => {
                             handleInteraction('click');
                             openCart();
@@ -171,8 +186,8 @@ export default function Navigation() {
                       aria-label="Toggle Menu"
                     >
                         <div className="relative w-6 h-4">
-                            <span className={`absolute left-0 top-0 w-full h-[1.5px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'top-1/2 -translate-y-1/2 rotate-45' : ''}`} />
-                            <span className={`absolute left-0 bottom-0 w-full h-[1.5px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'bottom-1/2 translate-y-1/2 -rotate-45' : ''}`} />
+                            <span className={`absolute left-0 top-0 w-full h-[1.5px] bg-white transition-all duration-300 ease-out ${isMenuOpen ? 'top-1/2 -translate-y-1/2 rotate-45' : ''}`} />
+                            <span className={`absolute left-0 bottom-0 w-full h-[1.5px] bg-white transition-all duration-300 ease-out ${isMenuOpen ? 'bottom-1/2 translate-y-1/2 -rotate-45' : ''}`} />
                         </div>
                     </button>
                 </div>
@@ -217,16 +232,15 @@ export default function Navigation() {
                       top: isDocked ? '26px' : '44px'
                   }}
               >
-                  <Link 
-                      href="/collection" 
-                      className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-all hover:opacity-50 text-white magnetic-trigger"
-                      data-label="SERIES"
-                      onMouseEnter={() => handleInteraction('hover')}
-                      onClick={() => handleInteraction('click')}
-                  >
-                      The Series
-                  </Link>
-                  <Link 
+                                  <Link 
+                                      href="/series" 
+                                      className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-all hover:opacity-50 text-white magnetic-trigger"
+                                      data-label="SERIES"
+                                      onMouseEnter={() => handleInteraction('hover')}
+                                      onClick={() => handleInteraction('click')}
+                                  >
+                                      The Series
+                                  </Link>                  <Link 
                       href="/about" 
                       className="font-sans text-[10px] font-bold tracking-[0.3em] uppercase transition-all hover:opacity-50 text-white magnetic-trigger"
                       data-label="CRAFT"
@@ -358,7 +372,7 @@ export default function Navigation() {
               <div className="relative z-10 flex flex-col justify-between h-full pt-32 pb-12 px-8" ref={menuRef}>
                   <div className="flex flex-col gap-2">
                       {[
-                        { label: 'The Series', href: '/collection', sub: '01' },
+                        { label: 'The Series', href: '/series', sub: '01' },
                         { label: 'Craft', href: '/about', sub: '02' },
                         { label: 'Heritage', href: '/about', sub: '03' },
                         { label: 'Archive', href: '/collection', sub: '04' },
